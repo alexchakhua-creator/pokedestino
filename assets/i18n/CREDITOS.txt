@@ -1,0 +1,1 @@
+Nombres y textos españoles: PBS de la copia local de Pokémon Añil y datos públicos de PokéAPI (https://github.com/PokeAPI/pokeapi/tree/master/data/v2/csv), descargados el 20-10-2026. Solo presentación: el motor @pkmn/sim conserva sus identificadores y reglas.

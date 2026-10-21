@@ -1,0 +1,20 @@
+Sprites adicionales de Pokémon Showdown / Smogon. Originales sin modificar.
+https://github.com/smogon/sprites
+
+taurospaldeacombat-b.png — https://play.pokemonshowdown.com/sprites/gen5-back/tauros-paldeacombat.png
+taurospaldeaaqua-f.png — https://play.pokemonshowdown.com/sprites/gen5/tauros-paldeaaqua.png
+taurospaldeaaqua-b.png — https://play.pokemonshowdown.com/sprites/gen5-back/tauros-paldeaaqua.png
+taurospaldeablaze-fs.png — https://play.pokemonshowdown.com/sprites/gen5-shiny/tauros-paldeablaze.png
+taurospaldeablaze-f.png — https://play.pokemonshowdown.com/sprites/gen5/tauros-paldeablaze.png
+taurospaldeaaqua-fs.png — https://play.pokemonshowdown.com/sprites/gen5-shiny/tauros-paldeaaqua.png
+basculinwhitestriped-b.png — https://play.pokemonshowdown.com/sprites/gen5-back/basculin-whitestriped.png
+basculinwhitestriped-fs.png — https://play.pokemonshowdown.com/sprites/gen5-shiny/basculin-whitestriped.png
+basculinwhitestriped-bs.png — https://play.pokemonshowdown.com/sprites/gen5-back-shiny/basculin-whitestriped.png
+taurospaldeacombat-bs.png — https://play.pokemonshowdown.com/sprites/gen5-back-shiny/tauros-paldeacombat.png
+taurospaldeablaze-b.png — https://play.pokemonshowdown.com/sprites/gen5-back/tauros-paldeablaze.png
+taurospaldeablaze-bs.png — https://play.pokemonshowdown.com/sprites/gen5-back-shiny/tauros-paldeablaze.png
+taurospaldeacombat-f.png — https://play.pokemonshowdown.com/sprites/gen5/tauros-paldeacombat.png
+taurospaldeaaqua-bs.png — https://play.pokemonshowdown.com/sprites/gen5-back-shiny/tauros-paldeaaqua.png
+basculinwhitestriped-f.png — https://play.pokemonshowdown.com/sprites/gen5/basculin-whitestriped.png
+taurospaldeacombat-fs.png — https://play.pokemonshowdown.com/sprites/gen5-shiny/tauros-paldeacombat.png
+20-10-2026: formas de Tauros Paldea, Basculin Raya Blanca y Basculin normal: sprites originales completos de la copia local de Pokémon Añil, Graphics/Pokemon y Graphics/Characters/Followers (normal/shiny). El PBS de Añil define BASCULIN como Raya Blanca y BASCULIN_2 como Raya Roja; el motor define Basculin normal como Raya Roja. Se adapta el mapeo explícitamente. No se recolorean ni se dibujan formas sustitutivas.

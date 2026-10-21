@@ -1,0 +1,192 @@
+{
+  "taurospaldeacombat": {
+    "b": {
+      "url": "assets/regional/taurospaldeacombat-anil-b.png",
+      "w": 888,
+      "h": 74,
+      "frames": 12
+    },
+    "bs": {
+      "url": "assets/regional/taurospaldeacombat-anil-bs.png",
+      "w": 888,
+      "h": 74,
+      "frames": 12
+    },
+    "f": {
+      "url": "assets/regional/taurospaldeacombat-anil-f.png",
+      "w": 6624,
+      "h": 96,
+      "frames": 69
+    },
+    "fs": {
+      "url": "assets/regional/taurospaldeacombat-anil-fs.png",
+      "w": 6624,
+      "h": 96,
+      "frames": 69
+    },
+    "o": {
+      "url": "assets/regional/taurospaldeacombat-anil-o.png",
+      "w": 256,
+      "h": 256,
+      "frames": 4
+    },
+    "os": {
+      "url": "assets/regional/taurospaldeacombat-anil-os.png",
+      "w": 326,
+      "h": 326,
+      "frames": 4
+    }
+  },
+  "taurospaldeaaqua": {
+    "f": {
+      "url": "assets/regional/taurospaldeaaqua-anil-f.png",
+      "w": 3456,
+      "h": 96,
+      "frames": 36
+    },
+    "b": {
+      "url": "assets/regional/taurospaldeaaqua-anil-b.png",
+      "w": 888,
+      "h": 74,
+      "frames": 12
+    },
+    "fs": {
+      "url": "assets/regional/taurospaldeaaqua-anil-fs.png",
+      "w": 3456,
+      "h": 96,
+      "frames": 36
+    },
+    "bs": {
+      "url": "assets/regional/taurospaldeaaqua-anil-bs.png",
+      "w": 888,
+      "h": 74,
+      "frames": 12
+    },
+    "o": {
+      "url": "assets/regional/taurospaldeaaqua-anil-o.png",
+      "w": 256,
+      "h": 256,
+      "frames": 4
+    },
+    "os": {
+      "url": "assets/regional/taurospaldeaaqua-anil-os.png",
+      "w": 326,
+      "h": 326,
+      "frames": 4
+    }
+  },
+  "taurospaldeablaze": {
+    "fs": {
+      "url": "assets/regional/taurospaldeablaze-anil-fs.png",
+      "w": 3456,
+      "h": 96,
+      "frames": 36
+    },
+    "f": {
+      "url": "assets/regional/taurospaldeablaze-anil-f.png",
+      "w": 3456,
+      "h": 96,
+      "frames": 36
+    },
+    "b": {
+      "url": "assets/regional/taurospaldeablaze-anil-b.png",
+      "w": 888,
+      "h": 74,
+      "frames": 12
+    },
+    "bs": {
+      "url": "assets/regional/taurospaldeablaze-anil-bs.png",
+      "w": 888,
+      "h": 74,
+      "frames": 12
+    },
+    "o": {
+      "url": "assets/regional/taurospaldeablaze-anil-o.png",
+      "w": 256,
+      "h": 256,
+      "frames": 4
+    },
+    "os": {
+      "url": "assets/regional/taurospaldeablaze-anil-os.png",
+      "w": 326,
+      "h": 326,
+      "frames": 4
+    }
+  },
+  "basculinwhitestriped": {
+    "b": {
+      "url": "assets/regional/basculinwhitestriped-anil-b.png",
+      "w": 4928,
+      "h": 56,
+      "frames": 88
+    },
+    "fs": {
+      "url": "assets/regional/basculinwhitestriped-anil-fs.png",
+      "w": 4576,
+      "h": 52,
+      "frames": 88
+    },
+    "bs": {
+      "url": "assets/regional/basculinwhitestriped-anil-bs.png",
+      "w": 4928,
+      "h": 56,
+      "frames": 88
+    },
+    "f": {
+      "url": "assets/regional/basculinwhitestriped-anil-f.png",
+      "w": 4576,
+      "h": 52,
+      "frames": 88
+    },
+    "o": {
+      "url": "assets/regional/basculinwhitestriped-anil-o.png",
+      "w": 256,
+      "h": 256,
+      "frames": 4
+    },
+    "os": {
+      "url": "assets/regional/basculinwhitestriped-anil-os.png",
+      "w": 256,
+      "h": 256,
+      "frames": 4
+    }
+  },
+  "basculin": {
+    "f": {
+      "url": "assets/regional/basculin-anil-f.png",
+      "w": 9620,
+      "h": 52,
+      "frames": 185
+    },
+    "fs": {
+      "url": "assets/regional/basculin-anil-fs.png",
+      "w": 4784,
+      "h": 52,
+      "frames": 92
+    },
+    "b": {
+      "url": "assets/regional/basculin-anil-b.png",
+      "w": 8869,
+      "h": 49,
+      "frames": 181
+    },
+    "bs": {
+      "url": "assets/regional/basculin-anil-bs.png",
+      "w": 4459,
+      "h": 49,
+      "frames": 91
+    },
+    "o": {
+      "url": "assets/regional/basculin-anil-o.png",
+      "w": 256,
+      "h": 256,
+      "frames": 4
+    },
+    "os": {
+      "url": "assets/regional/basculin-anil-os.png",
+      "w": 256,
+      "h": 256,
+      "frames": 4
+    }
+  }
+}

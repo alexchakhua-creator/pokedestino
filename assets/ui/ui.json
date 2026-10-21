@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "pixelArt": true,
+  "scale": 1,
+  "typeIcons": {
+    "sheet": "ui/type-icons.png",
+    "frame": [
+      16,
+      16
+    ],
+    "order": [
+      "Normal",
+      "Fighting",
+      "Flying",
+      "Poison",
+      "Ground",
+      "Rock",
+      "Bug",
+      "Ghost",
+      "Steel",
+      "Unknown",
+      "Fire",
+      "Water",
+      "Grass",
+      "Electric",
+      "Psychic",
+      "Ice",
+      "Dragon",
+      "Dark",
+      "Fairy"
+    ]
+  },
+  "commandIcons": {
+    "light": "ui/command-icons-light.png",
+    "dark": "ui/command-icons-dark.png",
+    "frame": [
+      18,
+      18
+    ],
+    "order": [
+      "equipo",
+      "capturar",
+      "huir",
+      "rendirse",
+      "atras",
+      "historial",
+      "sonido",
+      "silencio",
+      "menu",
+      "pantalla-completa",
+      "salir-pantalla-completa"
+    ]
+  },
+  "frames": {
+    "cream": {
+      "file": "ui/frame-cream.png",
+      "size": [
+        48,
+        48
+      ],
+      "slice": 12,
+      "padding": 12
+    },
+    "button": {
+      "file": "ui/button-dark.png",
+      "selected": "ui/button-dark-selected.png",
+      "size": [
+        48,
+        32
+      ],
+      "slice": 10,
+      "minHeight": 44
+    }
+  },
+  "emptyParty": {
+    "file": "ui/party-empty.png",
+    "size": [
+      42,
+      40
+    ]
+  },
+  "triangle": {
+    "file": "ui/triangle.png",
+    "size": [
+      8,
+      10
+    ]
+  },
+  "menu": {
+    "size": [
+      32,
+      32
+    ],
+    "files": [
+      "ui/menu-equipo.png",
+      "ui/menu-mochila.png",
+      "ui/menu-pokedex.png",
+      "ui/menu-mapa.png",
+      "ui/menu-medallas.png",
+      "ui/menu-amigos.png",
+      "ui/menu-opciones.png",
+      "ui/menu-guardar.png"
+    ]
+  },
+  "pokevial": {
+    "size": [
+      32,
+      32
+    ],
+    "files": [
+      "ui/pokevial-0.png",
+      "ui/pokevial-1.png",
+      "ui/pokevial-2.png",
+      "ui/pokevial-3.png"
+    ]
+  }
+}
