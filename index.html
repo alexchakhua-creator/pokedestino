@@ -928,140 +928,147 @@ body { background:#111827; }
 
 .strip .acts>.btn.primary::before{display:inline-block;width:0;height:0;vertical-align:middle;margin-right:6px}
 
-/* ===== Tema portátil clásico (21-10-2026): ventanas blancas de doble borde, cursor ▶ rojo,
-   fondos de color por pantalla. Sustituye a la paleta gris; los colores de juego (PS, tipos,
-   estados) se mantienen. Referencia: lienzo «PokéDestino interfaz estilo Pokémon». */
+/* ===== Tema portátil clásico (21-10-2026) con la paleta gris del usuario (#EDEDED #9CA3AF #4B5563
+   #1F2937 #111827): ventanas de doble borde, cursor ▶, menús en lista, cajas de PS asimétricas.
+   Los colores de juego (PS, tipos, estados) se mantienen. Referencia: lienzo «PokéDestino interfaz estilo Pokémon». */
 :root {
- --ink:#383848; --ink2:#505868; --paper:#F8F8F0; --paper2:#D8D8D0; --line:#A8B0C8; --muted:#505868;
- --accent:#E04038; --accent-ink:#C03028; --gold:#F0C030;
- --bg:#203048; --bg2:#2C4468; --navy0:#20202C; --navy:#2C4468; --navy2:#3868B8; --navy3:#5C98D8;
- --frame:#383848; --line2:#A8B0C8; --cream:#F8F8F0; --cream-line:#A8B0C8;
- --winbox:inset 0 0 0 3px #F8F8F0,inset 0 0 0 6px #A8B0C8,0 4px 0 #20202C;
- --pixel-shadow:0 4px 0 #20202C;
+ --ink:#111827; --ink2:#4B5563; --paper:#EDEDED; --paper2:#9CA3AF; --line:#9CA3AF; --muted:#4B5563;
+ --accent:#111827; --accent-ink:#C03028; --gold:#EDEDED;
+ --bg:#111827; --bg2:#1F2937; --navy0:#111827; --navy:#1F2937; --navy2:#4B5563; --navy3:#4B5563;
+ --frame:#111827; --line2:#9CA3AF; --cream:#EDEDED; --cream-line:#9CA3AF;
+ --winbox:inset 0 0 0 3px #EDEDED,inset 0 0 0 6px #9CA3AF,0 4px 0 #111827;
+ --pixel-shadow:0 4px 0 #111827;
 }
-body { background:#203048; color:#303040; }
+body { background:#111827; color:#111827; }
 /* windows */
-.panel,.modal,.title-card,.strip,.b-msg,.loc,.hud-loc,.hud-plate { background:#F8F8F0; color:#303040; border:4px solid #383848; border-image:none; border-radius:14px; box-shadow:var(--winbox); }
-.modal-bg { background:rgba(16,20,32,.55); }
-.modal-head,.modal-team .modal-head,.modal-bag .modal-head { background:transparent; color:#303040; border:0; border-bottom:3px solid #A8B0C8; box-shadow:none; }
-.modal-head h2 { color:#303040; text-shadow:2px 2px 0 #D8D8D0; }
-.modal-head .btn,.modal-head .btn.ghost,.modal-head .btn.ghost:hover { background:#F8F8F0; color:#303040; border:3px solid #383848; border-radius:10px; box-shadow:inset 0 -4px 0 #D8D8D0; }
-.small,.muted,.zone-state { color:#505868; }
+.panel,.modal,.title-card,.strip,.b-msg,.loc,.hud-loc,.hud-plate { background:#EDEDED; color:#111827; border:4px solid #111827; border-image:none; border-radius:14px; box-shadow:var(--winbox); }
+.modal-bg { background:rgba(17,24,39,.85); }
+.modal-head,.modal-team .modal-head,.modal-bag .modal-head { background:transparent; color:#111827; border:0; border-bottom:3px solid #9CA3AF; box-shadow:none; }
+.modal-head h2 { color:#111827; text-shadow:2px 2px 0 #9CA3AF; }
+.modal-head .btn,.modal-head .btn.ghost,.modal-head .btn.ghost:hover { background:#EDEDED; color:#111827; border:3px solid #111827; border-radius:10px; box-shadow:inset 0 -4px 0 #9CA3AF; }
+.small,.muted,.zone-state { color:#4B5563; }
 /* buttons: light keys; primary carries the red cursor */
-.btn,.icon-btn,.hud-btn { background:#F8F8F0; color:#303040; border:3px solid #383848; border-radius:10px; box-shadow:inset 0 -4px 0 #D8D8D0,0 3px 0 #20202C; }
-.btn:hover:not(:disabled),.icon-btn:hover,.hud-btn:hover { background:#E8ECF8; }
-.btn:focus-visible,.icon-btn:focus-visible,.hud-btn:focus-visible { outline:3px solid #E04038; outline-offset:2px; }
-.btn.primary,.btn.primary:hover:not(:disabled),.title-menu .btn.primary { background:#F8F8F0; color:#303040; border-color:#383848; box-shadow:inset 0 -4px 0 #D8D8D0,0 3px 0 #20202C; }
-.btn.primary::before { border-left-color:#E04038; }
+.btn,.icon-btn,.hud-btn { background:#EDEDED; color:#111827; border:3px solid #111827; border-radius:10px; box-shadow:inset 0 -4px 0 #9CA3AF,0 3px 0 #111827; }
+.btn:hover:not(:disabled),.icon-btn:hover,.hud-btn:hover { background:#9CA3AF; }
+.btn:focus-visible,.icon-btn:focus-visible,.hud-btn:focus-visible { outline:3px solid #111827; outline-offset:2px; }
+.btn.primary,.btn.primary:hover:not(:disabled),.title-menu .btn.primary { background:#EDEDED; color:#111827; border-color:#111827; box-shadow:inset 0 -4px 0 #9CA3AF,0 3px 0 #111827; }
+.btn.primary::before { border-left-color:#111827; }
 .btn.danger { color:#C03028; border-color:#C03028; }
-.tab { background:#D8DEEE; color:#303040; border:3px solid #383848; border-radius:10px 10px 0 0; box-shadow:none; }
-.tab.on { background:#F8F8F0; color:#303040; box-shadow:inset 0 -4px 0 #E04038; }
+.tab { background:#9CA3AF; color:#111827; border:3px solid #111827; border-radius:10px 10px 0 0; box-shadow:none; }
+.tab.on { background:#EDEDED; color:#111827; box-shadow:inset 0 -4px 0 #111827; }
 /* screen frame and HUD */
-.screen { border-color:#383848; box-shadow:0 0 0 3px #20202C; }
-.top { background:#2C4468; border-bottom-color:#383848; box-shadow:0 3px 0 #20202C; color:#F8F8F0; }
-.hud-loc b { color:#303040; text-shadow:2px 2px 0 #D8D8D0; }
-.pm { background:#F8F8F0; border-radius:50%; box-shadow:0 0 0 3px #383848; }
-.pm.lead { box-shadow:0 0 0 3px #E04038,0 0 0 6px #383848; }
-.pm.empty { background:transparent; box-shadow:0 0 0 3px #A8B0C8; }
+.screen { border-color:#111827; box-shadow:0 0 0 3px #111827; }
+.top { background:#1F2937; border-bottom-color:#111827; box-shadow:0 3px 0 #111827; color:#EDEDED; }
+.hud-loc b { color:#111827; text-shadow:2px 2px 0 #9CA3AF; }
+.pm { background:#EDEDED; border-radius:50%; box-shadow:0 0 0 3px #111827; }
+.pm.lead { box-shadow:0 0 0 3px #111827,0 0 0 6px #111827; }
+.pm.empty { background:transparent; box-shadow:0 0 0 3px #9CA3AF; }
 /* scene marks: white boxes with red marks, like an exclamation over a trainer */
-.poi .mark { background:#F8F8F0; color:#E04038; border:3px solid #383848; border-radius:8px; box-shadow:0 3px 0 #20202C; font-weight:700; }
-.poi.k-go .mark { color:#3868B8; }
-.poi.st-done .mark { color:#A8B0C8; background:#EDEDED; }
-.poi:hover::before,.poi:focus-visible::before,.poi.hl::before { border-color:#F8F8F0; box-shadow:0 0 0 3px #383848; border-style:dashed; }
+.poi .mark { background:#EDEDED; color:#111827; border:3px solid #111827; border-radius:8px; box-shadow:0 3px 0 #111827; font-weight:700; }
+.poi.k-go .mark { color:#4B5563; }
+.poi.st-done .mark { color:#9CA3AF; background:#EDEDED; }
+.poi:hover::before,.poi:focus-visible::before,.poi.hl::before { border-color:#EDEDED; box-shadow:0 0 0 3px #111827; border-style:dashed; }
 /* action strip: story left, actions as a cursor list */
-.strip .say { color:#303040; text-shadow:2px 2px 0 #D8D8D0; }
+.strip .say { color:#111827; text-shadow:2px 2px 0 #9CA3AF; }
 .strip .acts > .btn { background:transparent; border-color:transparent; box-shadow:none; justify-content:flex-start; }
 .strip .acts > .btn::before { content:''; display:inline-block; width:0; height:0; margin-right:8px; border:7px solid transparent; border-left:10px solid transparent; border-right:0; }
-.strip .acts > .btn.primary::before,.strip .acts > .btn:hover::before,.strip .acts > .btn:focus-visible::before { border-left-color:#E04038; }
-.strip .acts > .btn:hover:not(:disabled),.strip .acts > .btn:focus-visible { background:#E8ECF8; outline:none; }
-.route-step { border-color:#A8B0C8; color:#505868; }
-.route-step.current { background:#3868B8; color:#F8F8F0; border-color:#383848; box-shadow:none; }
-.route-step.past { background:#D8DEEE; color:#303040; }
+.strip .acts > .btn.primary::before,.strip .acts > .btn:hover::before,.strip .acts > .btn:focus-visible::before { border-left-color:#111827; }
+.strip .acts > .btn:hover:not(:disabled),.strip .acts > .btn:focus-visible { background:#9CA3AF; outline:none; }
+.route-step { border-color:#9CA3AF; color:#4B5563; }
+.route-step.current { background:#4B5563; color:#EDEDED; border-color:#111827; box-shadow:none; }
+.route-step.past { background:#9CA3AF; color:#111827; }
 /* three grasses */
-.capture-bush.btn { background:#78C060; color:#F8F8F0; border:4px solid #286028; border-radius:14px; text-shadow:2px 2px 0 #286028; box-shadow:inset 0 -5px 0 #48A048,0 3px 0 #20202C; }
-.capture-bush:hover,.capture-bush:focus-visible { background:#8CD070; border-color:#F8F8F0; outline:3px solid #383848; }
-.capture-result { background:#F8F8F0; color:#303040; border-color:#A8B0C8; box-shadow:none; }
-.capture-result.chosen { border-color:#E04038; }
+.capture-bush.btn { background:#4B5563; color:#EDEDED; border:4px solid #111827; border-radius:14px; text-shadow:2px 2px 0 #111827; box-shadow:inset 0 -5px 0 #1F2937,0 3px 0 #111827; }
+.capture-bush:hover,.capture-bush:focus-visible { background:#9CA3AF; border-color:#EDEDED; outline:3px solid #111827; }
+.capture-result { background:#EDEDED; color:#111827; border-color:#9CA3AF; box-shadow:none; }
+.capture-result.chosen { border-color:#111827; }
 /* battle */
-.b-ui { background:#383848; border-top-color:#20202C; box-shadow:none; }
-.b-msg { color:#303040; text-shadow:2px 2px 0 #D8D8D0; }
-.dbox { background:#F8F8E8; color:#303040; border:4px solid #383848; border-radius:10px 22px 10px 22px; box-shadow:6px 6px 0 rgba(32,32,44,.35); }
-.db-ps { background:#383848; color:#F0C030; border-radius:4px; }
-.db-hp { background:#383848; border-radius:4px; }
-.mv,.mv:hover:not(:disabled) { background:#F8F8F0; color:#303040; border:4px solid #383848; border-image:none; border-left:14px solid var(--tc,#A8A878); border-radius:12px; box-shadow:inset 0 -5px 0 rgba(0,0,0,.12); text-shadow:none; }
-.mv:hover:not(:disabled),.mv:focus-visible { outline:4px solid #E04038; outline-offset:2px; }
-.mv span,.mv .num { color:#505868; }
-.mv.empty { background:#5A6478; border:4px dashed #A8B0C8; box-shadow:none; }
-.move-info { background:#F8F8F0; color:#303040; border:3px solid #383848; border-radius:10px; box-shadow:inset 0 -4px 0 #D8D8D0; }
-.cmd,#bswitch,#brun,#bback { background:#F8F8F0; color:#303040; border:3px solid #383848; border-radius:10px; box-shadow:inset 0 -4px 0 #D8D8D0; font-weight:700; }
-.cmd:hover:not(:disabled),#bswitch:hover:not(:disabled),#brun:hover:not(:disabled),#bback:hover:not(:disabled),.cmd:focus-visible { background:#E8ECF8; outline:3px solid #E04038; outline-offset:2px; }
-.cmd .odds { background:#F0C030; color:#303040; border-color:#383848; }
-.b-tools .num { background:#F8F8F0; color:#303040; border:3px solid #383848; border-radius:8px; }
+.b-ui { background:#111827; border-top-color:#111827; box-shadow:none; }
+.b-msg { color:#111827; text-shadow:2px 2px 0 #9CA3AF; }
+.dbox { background:#EDEDED; color:#111827; border:4px solid #111827; border-radius:10px 22px 10px 22px; box-shadow:6px 6px 0 rgba(17,24,39,.5); }
+.db-ps { background:#111827; color:#EDEDED; border-radius:4px; }
+.db-hp { background:#111827; border-radius:4px; }
+.mv,.mv:hover:not(:disabled) { background:#EDEDED; color:#111827; border:4px solid #111827; border-image:none; border-left:14px solid var(--tc,#A8A878); border-radius:12px; box-shadow:inset 0 -5px 0 rgba(0,0,0,.12); text-shadow:none; }
+.mv:hover:not(:disabled),.mv:focus-visible { outline:4px solid #111827; outline-offset:2px; }
+.mv span,.mv .num { color:#4B5563; }
+.mv.empty { background:#1F2937; border:4px dashed #9CA3AF; box-shadow:none; }
+.move-info { background:#EDEDED; color:#111827; border:3px solid #111827; border-radius:10px; box-shadow:inset 0 -4px 0 #9CA3AF; }
+.cmd,#bswitch,#brun,#bback { background:#EDEDED; color:#111827; border:3px solid #111827; border-radius:10px; box-shadow:inset 0 -4px 0 #9CA3AF; font-weight:700; }
+.cmd:hover:not(:disabled),#bswitch:hover:not(:disabled),#brun:hover:not(:disabled),#bback:hover:not(:disabled),.cmd:focus-visible { background:#9CA3AF; outline:3px solid #111827; outline-offset:2px; }
+.cmd .odds { background:#EDEDED; color:#111827; border-color:#111827; }
+.b-tools .num { background:#EDEDED; color:#111827; border:3px solid #111827; border-radius:8px; }
 /* menu: a list window */
 .menu-grid { grid-template-columns:minmax(0,1fr) !important; gap:4px; }
-.menu-btn,.menu-btn:hover:not(:disabled) { flex-direction:row; justify-content:flex-start; gap:14px; padding:8px 14px; background:transparent; color:#303040; border:0; box-shadow:none; font-size:1.15rem; text-align:left; }
+.menu-btn,.menu-btn:hover:not(:disabled) { flex-direction:row; justify-content:flex-start; gap:14px; padding:8px 14px; background:transparent; color:#111827; border:0; box-shadow:none; font-size:1.15rem; text-align:left; }
 .menu-btn::before { content:''; width:0; height:0; border:7px solid transparent; border-left:10px solid transparent; border-right:0; }
-.menu-btn:hover:not(:disabled),.menu-btn:focus-visible { background:#E8ECF8; outline:none; }
-.menu-btn:hover::before,.menu-btn:focus-visible::before { border-left-color:#E04038; }
+.menu-btn:hover:not(:disabled),.menu-btn:focus-visible { background:#9CA3AF; outline:none; }
+.menu-btn:hover::before,.menu-btn:focus-visible::before { border-left-color:#111827; }
 .mi { width:32px; height:32px; background-color:transparent; border:0; box-shadow:none; }
-.card { background:#F8F8F0; color:#303040; border:3px solid #383848; border-radius:12px; box-shadow:inset 0 -4px 0 #D8D8D0; }
-.card:hover,.card:focus-visible { background:#E8ECF8; }
+.card { background:#EDEDED; color:#111827; border:3px solid #111827; border-radius:12px; box-shadow:inset 0 -4px 0 #9CA3AF; }
+.card:hover,.card:focus-visible { background:#9CA3AF; }
 /* team: blue background, blue cards, the chosen one orange */
-.modal-team { background-color:#3E70B0; background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.06) 0 24px,transparent 24px 48px); border:4px solid #383848; border-radius:14px; box-shadow:0 4px 0 #20202C; }
-.modal-team .modal-head h2,.team-order-help { color:#F8F8F0; text-shadow:2px 2px 0 #203058; }
-.modal-team .modal-head { border-bottom-color:#5C98D8; }
-.team-slot { background:#5C98D8; background-image:none; color:#F8F8F0; border:4px solid #203058; border-radius:16px; box-shadow:0 4px 0 #18243F; text-shadow:2px 2px 0 #203058; }
-.team-slot.on { background:#F07A40; background-image:none; color:#F8F8F0; border-color:#5A2010; box-shadow:0 4px 0 #3A140A; text-shadow:2px 2px 0 #5A2010; }
-.team-slot .small,.slot-number,.team-slot.on .small,.team-slot.on .slot-number,.team-slot.on .grip-dots { color:#F8F8F0; }
-.team-slot.empty { background:#7C8FB0; border:4px dashed #203058; color:#E8ECF8; box-shadow:none; }
-.team-slot .hpbar { background:#383848; border-color:#383848; border-radius:4px; box-shadow:none; }
-.detail-top,.mon-record { background:#F8F8F0; border:4px solid #383848; border-radius:14px; box-shadow:var(--winbox); }
-.profile-label,.record-heading { background:#3868B8; color:#F8F8F0; box-shadow:none; }
-.ability-block .label { background:#D8DEEE; color:#303040; }
-.moves-list li { background:#F8F8F0; border-color:#A8B0C8; box-shadow:none; }
-.mon-record .acts .btn { background:#F8F8F0; color:#303040; box-shadow:inset 0 -4px 0 #D8D8D0; }
+.modal-team { background-color:#1F2937; background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.06) 0 24px,transparent 24px 48px); border:4px solid #111827; border-radius:14px; box-shadow:0 4px 0 #111827; }
+.modal-team .modal-head h2,.team-order-help { color:#EDEDED; text-shadow:2px 2px 0 #111827; }
+.modal-team .modal-head { border-bottom-color:#4B5563; }
+.team-slot { background:#4B5563; background-image:none; color:#EDEDED; border:4px solid #111827; border-radius:16px; box-shadow:0 4px 0 #111827; text-shadow:2px 2px 0 #111827; }
+.team-slot.on { background:#EDEDED; background-image:none; color:#EDEDED; border-color:#111827; box-shadow:0 4px 0 #111827; text-shadow:2px 2px 0 #111827; }
+.team-slot .small,.slot-number,.team-slot.on .small,.team-slot.on .slot-number,.team-slot.on .grip-dots { color:#EDEDED; }
+.team-slot.empty { background:#1F2937; border:4px dashed #111827; color:#9CA3AF; box-shadow:none; }
+.team-slot .hpbar { background:#111827; border-color:#111827; border-radius:4px; box-shadow:none; }
+.detail-top,.mon-record { background:#EDEDED; border:4px solid #111827; border-radius:14px; box-shadow:var(--winbox); }
+.profile-label,.record-heading { background:#4B5563; color:#EDEDED; box-shadow:none; }
+.ability-block .label { background:#9CA3AF; color:#111827; }
+.moves-list li { background:#EDEDED; border-color:#9CA3AF; box-shadow:none; }
+.mon-record .acts .btn { background:#EDEDED; color:#111827; box-shadow:inset 0 -4px 0 #9CA3AF; }
 /* bag: warm striped background, white pocket banner and list */
-.modal-bag { background-color:#E8B048; background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.12) 0 20px,transparent 20px 40px); border:4px solid #383848; border-radius:14px; box-shadow:0 4px 0 #20202C; }
-.modal-bag .modal-head { border-bottom-color:#C88A28; }
-.pocket-banner { background:#F8F8F0; color:#303040; border:4px solid #383848; border-radius:14px; box-shadow:var(--winbox); }
-.pocket-banner span { color:#505868; }
-.modal-bag .bag-list { background:#F8F8F0; border:4px solid #383848; border-radius:14px; box-shadow:var(--winbox); }
-.modal-bag .bag-list > .muted { color:#505868; }
-.bag-row { background:transparent; color:#303040; border:0; border-radius:8px; box-shadow:none; }
+.modal-bag { background-color:#4B5563; background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.12) 0 20px,transparent 20px 40px); border:4px solid #111827; border-radius:14px; box-shadow:0 4px 0 #111827; }
+.modal-bag .modal-head { border-bottom-color:#1F2937; }
+.pocket-banner { background:#EDEDED; color:#111827; border:4px solid #111827; border-radius:14px; box-shadow:var(--winbox); }
+.pocket-banner span { color:#4B5563; }
+.modal-bag .bag-list { background:#EDEDED; border:4px solid #111827; border-radius:14px; box-shadow:var(--winbox); }
+.modal-bag .bag-list > .muted { color:#4B5563; }
+.bag-row { background:transparent; color:#111827; border:0; border-radius:8px; box-shadow:none; }
 .bag-row::before { content:''; width:0; height:0; border:7px solid transparent; border-left:10px solid transparent; border-right:0; }
-.bag-row.on,.bag-row:hover { background:#E8ECF8; color:#303040; border:0; box-shadow:none; }
-.bag-row.on::before { border-left-color:#E04038; }
-.bag-detail { background:#F8F8F0; border:4px solid #383848; border-radius:14px; box-shadow:var(--winbox); }
-.bag-big { background:#E8ECF8; border:3px solid #A8B0C8; border-radius:10px; box-shadow:none; }
-.modal-bag .bag-foot,.modal-bag .bag-foot .muted { color:#303040; border-top-color:#C88A28; }
-.tm-peer,.tm-peer.yes,.tm-peer.no,.tm-peer.known,.tm-recipient,.tm-recipient.known,.tm-recipient:disabled { background:#F8F8F0; color:#303040; border-color:#A8B0C8; box-shadow:none; }
-.tm-recipient.yes:hover,.tm-recipient.yes:focus-visible { background:#E8ECF8; border-color:#383848; }
+.bag-row.on,.bag-row:hover { background:#9CA3AF; color:#111827; border:0; box-shadow:none; }
+.bag-row.on::before { border-left-color:#111827; }
+.bag-detail { background:#EDEDED; border:4px solid #111827; border-radius:14px; box-shadow:var(--winbox); }
+.bag-big { background:#9CA3AF; border:3px solid #9CA3AF; border-radius:10px; box-shadow:none; }
+.modal-bag .bag-foot,.modal-bag .bag-foot .muted { color:#111827; border-top-color:#1F2937; }
+.tm-peer,.tm-peer.yes,.tm-peer.no,.tm-peer.known,.tm-recipient,.tm-recipient.known,.tm-recipient:disabled { background:#EDEDED; color:#111827; border-color:#9CA3AF; box-shadow:none; }
+.tm-recipient.yes:hover,.tm-recipient.yes:focus-visible { background:#9CA3AF; border-color:#111827; }
 /* options: the row in use gets the red cursor */
-.opt { border-bottom:2px dashed #D8D8D0; }
-.opt:focus-within { background:#E8ECF8; box-shadow:inset 6px 0 0 #E04038; }
-.sw span { background:#D8DEEE; border-color:#383848; }
-.sw span::after { background:#383848; }
-.sw input:checked + span { background:#78C060; }
-input[type=range] { accent-color:#E04038; }
+.opt { border-bottom:2px dashed #9CA3AF; }
+.opt:focus-within { background:#9CA3AF; box-shadow:inset 6px 0 0 #111827; }
+.sw span { background:#9CA3AF; border-color:#111827; }
+.sw span::after { background:#111827; }
+.sw input:checked + span { background:#4B5563; }
+input[type=range] { accent-color:#111827; }
 /* title and new game */
-.title-card { color:#303040; }
-.title-kicker,.title-card > .small { color:#505868; }
-.title-rule::before,.title-rule::after,.title-rule i { background:#A8B0C8; }
-.title-card .save-card { color:#303040; background:#E8ECF8; border-color:#A8B0C8; }
-.config-group,.char-card,.team-detail:not(:has(.mon-profile)),.rules-note { background:#F8F8F0; border-color:#A8B0C8; }
-.char-card.on,.preset.on { border-color:#E04038; box-shadow:inset 0 0 0 3px #F8F8F0,inset 0 0 0 6px #E04038; }
-.toast { background:#F8F8F0; color:#303040; border:4px solid #383848; border-radius:12px; box-shadow:var(--winbox); }
-.online-shell > .row { color:#F8F8F0; }
-.online-shell > .row .label { color:#D8DEEE; }
-.online-shell > .row .btn.ghost { color:#303040; }
-.prebattle-team > span,.evo-row { background:#F8F8F0; border-color:#A8B0C8; }
-.hall-team > div { background:#3868B8; color:#F8F8F0; border-color:#383848; }
-.evolution-stage { background:#2C4468; border-color:#383848; }
-.adv.center-overview { background:#203048; }
-.center-overview .viewport { outline-color:#383848; box-shadow:0 0 0 6px #20202C; }
-.mi { background-color:#383848; border-radius:8px; box-shadow:inset 0 -3px 0 #20202C; }
-.label { color:#505868; }
+.title-card { color:#111827; }
+.title-kicker,.title-card > .small { color:#4B5563; }
+.title-rule::before,.title-rule::after,.title-rule i { background:#9CA3AF; }
+.title-card .save-card { color:#111827; background:#9CA3AF; border-color:#9CA3AF; }
+.config-group,.char-card,.team-detail:not(:has(.mon-profile)),.rules-note { background:#EDEDED; border-color:#9CA3AF; }
+.char-card.on,.preset.on { border-color:#111827; box-shadow:inset 0 0 0 3px #EDEDED,inset 0 0 0 6px #111827; }
+.toast { background:#EDEDED; color:#111827; border:4px solid #111827; border-radius:12px; box-shadow:var(--winbox); }
+.online-shell > .row { color:#EDEDED; }
+.online-shell > .row .label { color:#9CA3AF; }
+.online-shell > .row .btn.ghost { color:#111827; }
+.prebattle-team > span,.evo-row { background:#EDEDED; border-color:#9CA3AF; }
+.hall-team > div { background:#4B5563; color:#EDEDED; border-color:#111827; }
+.evolution-stage { background:#1F2937; border-color:#111827; }
+.adv.center-overview { background:#111827; }
+.center-overview .viewport { outline-color:#111827; box-shadow:0 0 0 6px #111827; }
+.mi { background-color:#111827; border-radius:8px; box-shadow:inset 0 -3px 0 #111827; }
+.label { color:#4B5563; }
 .modal-head .btn:focus:not(:focus-visible) { outline:none; }
+/* grey palette: text that must stay readable on the dark and mid greys */
+.team-slot.on { color:#111827; text-shadow:none; }
+.team-slot.on .small,.team-slot.on .slot-number,.team-slot.on .grip-dots,.team-slot.on .ts-info b { color:#1F2937; text-shadow:none; }
+.modal-bag .modal-head h2 { color:#EDEDED; text-shadow:2px 2px 0 #111827; }
+.modal-bag .bag-foot,.modal-bag .bag-foot .muted,.modal-bag .bag-foot .small { color:#EDEDED; }
+.modal-team :focus-visible,.modal-bag > :not(.bag-detail):not(.bag-list) :focus-visible,.b-ui :focus-visible,.top :focus-visible { outline-color:#EDEDED; }
+.capture-bush:hover,.capture-bush:focus-visible { color:#111827; text-shadow:none; }
 </style>
 <div class="top"><div class="bar" id="topbar"></div></div>
 <div id="app"><div class="loading"><div><div class="spin"></div><h2>Cargando Kanto…</h2><p class="small">Preparando el motor de combate</p></div></div></div>
