@@ -9971,8 +9971,10 @@ ACT.openLog = () => modal(`<div class="modal-head"><h2>Novedades</h2><button cla
 ACT.openOptions = () => modal(`<div class="modal-head"><h2>Opciones</h2><button class="btn sm" data-a="closeModal" data-close>Volver</button></div>
   <label class="opt"><span><b>Volumen</b></span><input type="range" id="vol" min="0" max="100" value="${Math.round(AUDIO.pref.vol * 100)}"></label>
   <label class="opt"><span><b>Silenciar</b></span><span class="sw"><input type="checkbox" id="mutechk" ${AUDIO.pref.muted ? 'checked' : ''}><span></span></span></label>
+  <div class="opt"><span><b>Velocidad del texto</b><br><span class="small muted">En combate, cuánto tiempo se queda cada mensaje.</span></span><span class="acts">${[['slow', 'Lenta'], ['normal', 'Normal'], ['fast', 'Rápida']].map(([k, l]) => `<button class="btn sm ${(AUDIO.pref.textPace || 'normal') === k ? 'primary' : 'ghost'}" data-a="textPace" data-v="${k}" aria-pressed="${(AUDIO.pref.textPace || 'normal') === k}">${l}</button>`).join('')}</span></div>
   ${S ? `<label class="opt"><span><b>Evolución automática</b><br><span class="small muted">Al subir de nivel; tú eliges las ramas múltiples.</span></span><span class="sw"><input type="checkbox" data-evo-auto ${S.cfg.evoAuto!==false ? 'checked' : ''}><span></span></span></label><div class="opt"><span><b>Semilla</b><br><span class="small muted">Compártela para comparar recorridos</span></span><code>${esc(S.cfg.seed)}</code></div>
   <div class="acts"><button class="btn" data-a="shareRun">Copiar código de reglas</button><button class="btn ghost" data-a="quit">Salir a la portada</button><button class="btn ghost danger" data-a="abandon">Borrar partida</button></div>` : ''}`);
+ACT.textPace = d => { AUDIO.pref.textPace = d.v; saveAudioPref(); ACT.openOptions(); };
 document.addEventListener('input', e => { if (e.target.id === 'vol') { audioUnlock(); setVolume(+e.target.value / 100); } });
 document.addEventListener('change', e => { if (e.target.id === 'mutechk') { audioUnlock(); if (e.target.checked !== AUDIO.pref.muted) toggleMute(); } });
 ACT.shareRun = () => { const code = 'RLK2.' + enc64(S.cfg); modal(`<div class="modal-head"><h2>Código de reglas</h2><button class="btn sm" data-a="closeModal" data-close>Volver</button></div><textarea id="cfgcode" readonly>${code}</textarea><div class="foot"><button class="btn primary" data-a="copyArea" data-t="cfgcode">Copiar</button></div>`); };
@@ -11313,6 +11315,10 @@ function lineToEvent0(parts, at) {
 // ---------- scene ----------
 let fastForward = false;
 const dur = ms => fastForward ? 0 : ms;
+// Reading time: every log line stays on screen long enough to read it (scaled by the "Velocidad del texto" option).
+const TEXT_PACE = { slow: 1.6, normal: 1, fast: 0.55 };
+const readMs = text => (650 + 34 * String(text || '').length) * (TEXT_PACE[AUDIO.pref.textPace] || 1);
+let readUntil = 0;
 // Battle stage: a 512×288 (16:9) window onto Añil's 512×384 backgrounds, cropped stageY() px from the
 // top, scaled as one unit. Positions are the bottom-centre of each battler, from Añil's
 // Battle::Scene.pbBattlerPosition, shifted by the crop. Databoxes are real-size HTML over the stage.
@@ -11566,7 +11572,10 @@ async function animate() {
     const ev = lineToEvent(parts, at);
     if (!ev) continue;
     if (ev.k === 'skipNext') { skipNext = ev.what; continue; }
+    readUntil = 0;
     await playEvent(ev);
+    const left = readUntil - performance.now();
+    if (left > 0) await sleep(dur(left));
   }
   if (!B) return;
   B.busy = false; fastForward = false; renderPlates(); renderControls();
@@ -11576,6 +11585,7 @@ function pushLog(text, sep) {
   if (sep) { box.querySelectorAll('p').forEach(p => p.classList.add('old')); return; }
   text = text.replace(/\bde el /g, 'del ').replace(/^([¡¿]?)(\p{Ll})/u, (m, a, c) => a + c.toUpperCase());
   const p = document.createElement('p'); p.textContent = text; box.appendChild(p); box.scrollTop = box.scrollHeight;
+  const now = performance.now(); readUntil = Math.max(readUntil, now) + readMs(text) * (readUntil > now ? 0.6 : 1);
 }
 
 // ---------- controls ----------
