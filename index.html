@@ -9581,7 +9581,7 @@ new MutationObserver(changes=>{for(const c of changes)for(const el of c.addedNod
 
 // ---- src/audio.js ----
 // ================= AUDIO =================
-// Original chiptune: one main theme ("Randomoria") arranged per area with Web Audio.
+// Music: recorded CC0 loops per area (assets/music); original chiptune theme ("Randomoria", Web Audio) as fallback and for sound effects.
 // Starts only after the first user interaction; volume and mute are remembered per browser.
 const AUDIO = { ctx: null, master: null, music: null, track: null, timer: null, step: 0, next: 0, pref: { vol: 0.5, muted: false } };
 try { Object.assign(AUDIO.pref, JSON.parse(localStorage.getItem('pr-audio') || '{}')); } catch { }
@@ -9651,18 +9651,46 @@ function schedule() {
     AUDIO.next += sixteenth; AUDIO.step++;
   }
 }
+// Recorded music: CC0 "JRPG Music Pack" loops by Juhani Junkala (SubspaceAudio), see assets/music/LICENCIA.txt.
+// Several loops per area; one is chosen each time the area type changes. Falls back to the synth theme if a file cannot load.
+const MUSIC_FILES = { home: ['home'], town: ['town1', 'town2'], route: ['route1', 'route2', 'route3'], forest: ['forest'], cave: ['cave'], center: ['center'], gym: ['gym'], battle: ['battle1', 'battle2'], wild: ['wild'], boss: ['boss1', 'boss2'] };
+const MUSIC_LEVEL = .8, MUSIC_FADE = .6;
+AUDIO.bufs = new Map(); AUDIO.tok = 0; AUDIO.last = {};
+function loadTrack(file) {
+  let hit = AUDIO.bufs.get(file); if (hit) { AUDIO.bufs.delete(file); AUDIO.bufs.set(file, hit); return hit; }
+  hit = fetch('assets/music/' + file + '.ogg').then(r => { if (!r.ok) throw Error('music ' + r.status); return r.arrayBuffer(); }).then(b => AUDIO.ctx.decodeAudioData(b));
+  hit.catch(() => AUDIO.bufs.delete(file)); AUDIO.bufs.set(file, hit);
+  while (AUDIO.bufs.size > 2) AUDIO.bufs.delete(AUDIO.bufs.keys().next().value); // decoded loops are big: keep two
+  return hit;
+}
+function pickTrack(track) {
+  const list = MUSIC_FILES[track] || [], last = AUDIO.last[track];
+  const pool = list.length > 1 ? list.filter(f => f !== last) : list; const file = pool[Math.floor(Math.random() * pool.length)];
+  AUDIO.last[track] = file; return file;
+}
+function startSynth(track) { AUDIO.step = 0; AUDIO.next = AUDIO.ctx.currentTime + .08; AUDIO.timer = setInterval(schedule, 40); schedule(); }
 function playMusic(track) {
   if (!track || !ARR[track]) track = 'town';
   AUDIO.want = track;
   if (!AUDIO.ctx || AUDIO.ctx.state !== 'running') return;
-  if (AUDIO.track === track && AUDIO.timer) return;
+  if (AUDIO.track === track && (AUDIO.timer || AUDIO.src || AUDIO.loading)) return;
   stopMusic();
-  AUDIO.track = track; AUDIO.music = AUDIO.ctx.createGain(); AUDIO.music.gain.value = 1; AUDIO.music.connect(AUDIO.master);
-  AUDIO.step = 0; AUDIO.next = AUDIO.ctx.currentTime + .08; AUDIO.timer = setInterval(schedule, 40); schedule();
+  const c = AUDIO.ctx, tok = ++AUDIO.tok;
+  AUDIO.track = track; AUDIO.music = c.createGain(); AUDIO.music.gain.value = 0; AUDIO.music.connect(AUDIO.master);
+  const file = pickTrack(track);
+  if (!file) { AUDIO.music.gain.value = 1; startSynth(track); return; }
+  AUDIO.loading = true;
+  loadTrack(file).then(buf => {
+    if (tok !== AUDIO.tok || !AUDIO.music) return; AUDIO.loading = false;
+    const src = c.createBufferSource(); src.buffer = buf; src.loop = true; src.connect(AUDIO.music); src.start();
+    AUDIO.src = src; AUDIO.music.gain.setTargetAtTime(MUSIC_LEVEL, c.currentTime, MUSIC_FADE / 3);
+  }).catch(() => { if (tok !== AUDIO.tok || !AUDIO.music) return; AUDIO.loading = false; AUDIO.music.gain.value = 1; startSynth(track); });
 }
 function stopMusic() {
+  AUDIO.tok++; AUDIO.loading = false;
   if (AUDIO.timer) clearInterval(AUDIO.timer); AUDIO.timer = null;
-  if (AUDIO.music) { const g = AUDIO.music; try { g.gain.setTargetAtTime(0, AUDIO.ctx.currentTime, .08); } catch { } setTimeout(() => g.disconnect(), 400); AUDIO.music = null; }
+  const src = AUDIO.src; AUDIO.src = null;
+  if (AUDIO.music) { const g = AUDIO.music; try { g.gain.setTargetAtTime(0, AUDIO.ctx.currentTime, .12); } catch { } setTimeout(() => { try { src?.stop(); } catch { } g.disconnect(); }, 700); AUDIO.music = null; }
   AUDIO.track = null;
 }
 const SFX = { heal: [[72, 2], [76, 2], [79, 2], [84, 4]], throw: [[67, 1], [72, 1]], shake: [[55, 1]], caught: [[72, 2], [76, 2], [79, 2], [84, 2], [88, 4]], select: [[79, 1]], badge: [[72, 2], [76, 2], [79, 2], [84, 2], [79, 2], [84, 6]] };
@@ -9985,6 +10013,7 @@ ACT.abandonYes = () => { clearSave(); S = null; closeModal(); render(); };
 
 // ---------- title & new game ----------
 function renderTitle() {
+  playMusic('home');
   const sv = loadSave();
   app().innerHTML = `<section class="title-screen"><div class="title-bg" aria-hidden="true"></div>
     <div class="title-card panel"><div class="title-emblem" aria-hidden="true"></div><div class="title-kicker">KANTO · RANDOMLOCKE</div><h1 class="logo"><img class="brand-logo" src="assets/ui/pokedestino-logo.png" alt="PokéDestino"></h1><div class="title-rule" aria-hidden="true"><i></i><i></i><i></i></div><p class="small">Un Randomlocke de Kanto: cada encuentro es aleatorio, cada caída es para siempre.</p><p class="small campaign-scope">Kanto hasta la Liga · 8 gimnasios · 40 zonas de captura · 50 MT</p>

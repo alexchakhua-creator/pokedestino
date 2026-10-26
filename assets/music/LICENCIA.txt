@@ -1,0 +1,8 @@
+Music: "JRPG Music Pack #1 [Exploration]", "#2 [Towns]", "#3 [Evil]", "#4 [Calm]", "#5 [Action]"
+by Juhani Junkala (published by SubspaceAudio), CC0 1.0 Universal (public domain). No attribution required.
+Source: https://opengameart.org/content/jrpg-pack-1-exploration (and packs 2-5, same author)
+Files here are re-encoded Ogg Vorbis excerpts of the original tracks:
+home=Calm2 Childhood Friends, center=Calm3 Peaceful Days, town1=Town1 Home Town, town2=Town2 Where Time Stands Still,
+route1=Grasslands, route2=Prairie Nights, route3=Tropical Island, forest=Sneaking Around, cave=Tha'el Mines, gym=Military Base,
+battle1=Action2 Army Approaching, battle2=Evil1 Ancient Evil Awakens, wild=Action3 Preparing For Battle,
+boss1=Action1 Encounter With The Witches, boss2=Evil3 Apocalypse.
