@@ -1074,6 +1074,35 @@ input[type=range] { accent-color:#111827; }
 .ng-sub:first-child { margin-top:0; }
 .presets.length { margin-bottom:6px; }
 .steps-dots .done { color:#4B5563; }
+/* Pulido móvil y accesibilidad (2026-11-02): textos ≥12 px, combate y exploración en apaisado, escena vertical, mochila en móvil. */
+.cmd .odds { font-size:12px; }
+.b-msg.asking .blog p:last-child { font-size:max(12px,.8em); color:#4B5563; }
+@media (max-width:640px) {
+  .capture-bush.btn { font-size:13px; }
+  .mv span { font-size:12px; }
+  /* bag: one scrolling row of pockets; the pocket banner repeats the active tab */
+  .modal-bag > .tabs { flex-wrap:nowrap; overflow-x:auto; overscroll-behavior-x:contain; scrollbar-width:thin; padding-bottom:6px; }
+  .modal-bag > .tabs .tab { flex:none; white-space:nowrap; }
+  .modal-bag .pocket-banner { display:none; }
+}
+/* portrait phone: the stage sizes itself to the picture; the command area takes the rest */
+@media (max-width:640px) and (orientation:portrait) {
+  .battle.screen .stagewrap { flex:0 1 auto; aspect-ratio:var(--sar, 1); }
+  .battle.screen .b-ui { flex:1 0 auto; grid-template-rows:minmax(88px,1fr) auto; }
+  .battle.screen .b-msg { height:auto; min-height:88px; max-height:160px; }
+  .battle.screen .move-cell { min-height:clamp(56px, 8dvh, 76px); }
+  .battle.screen .cmd { min-height:clamp(48px, 6.5dvh, 60px); }
+}
+@media (orientation:landscape) and (max-height:500px) {
+  .battle.screen .b-grid { grid-template-columns:minmax(0,1fr) 124px; }
+  .battle.screen .mv { flex-wrap:wrap; align-content:center; row-gap:0; }
+  .battle.screen .mv span { width:100%; padding-left:20px; margin-left:0; font-size:12px; line-height:1.1; }
+  .battle.screen .cmd { flex-wrap:wrap; align-content:center; row-gap:0; min-width:0; }
+  .battle.screen .cmd .odds { width:100%; padding:0; background:none; box-shadow:none; color:inherit; text-align:center; line-height:1.1; }
+  .hud { flex-wrap:wrap; }
+  .hud .party-mini { display:flex; order:3; width:100%; justify-content:flex-end; gap:4px; }
+  .hud .pm { width:34px; height:32px; }
+}
 </style>
 <div class="top"><div class="bar" id="topbar"></div></div>
 <div id="app"><div class="loading"><div><div class="spin"></div><h2>Cargando Kanto…</h2><p class="small">Preparando el motor de combate</p></div></div></div>
@@ -1108,7 +1137,7 @@ class Rng {
 const live = new Rng(String(Date.now()), String(Math.random()));
 const enc64 = o => btoa(unescape(encodeURIComponent(JSON.stringify(o))));
 const dec64 = s => JSON.parse(decodeURIComponent(escape(atob(s.trim()))));
-function toast(msg) { document.querySelectorAll('.toast').forEach(t=>t.remove()); const t = document.createElement('div'); t.setAttribute('role','status'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 2200); }
+function toast(msg, ms = 2200) { document.querySelectorAll('.toast').forEach(t=>t.remove()); const t = document.createElement('div'); t.setAttribute('role','status'); t.className = 'toast'; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), ms); }
 async function copyText(text, el) { try { await navigator.clipboard.writeText(text); toast('Copiado'); } catch { if (el) { el.focus(); el.select?.(); } toast('Selecciona el texto y cópialo'); } }
 
 // ================= STATIC DATA =================
@@ -1164,6 +1193,9 @@ const ITEMS = {
 const HELD_ES = { leftovers: 'Restos', choiceband: 'Cinta Elección', choicespecs: 'Gafas Elección', choicescarf: 'Pañuelo Elección', lifeorb: 'Vidasfera', focussash: 'Banda Focus', assaultvest: 'Chaleco Asalto', rockyhelmet: 'Casco Dentado', expertbelt: 'Cinta Experto', eviolite: 'Mineral Evolutivo', weaknesspolicy: 'Seguro Debilidad', lightclay: 'Refleluz', quickclaw: 'Garra Rápida', brightpowder: 'Polvo Brillo', kingsrock: 'Roca del Rey', silkscarf: 'Pañuelo Seda', charcoal: 'Carbón', mysticwater: 'Agua Mística', miracleseed: 'Semilla Milagro', magnet: 'Imán', nevermeltice: 'Antiderretir', blackbelt: 'Cinturón Negro', poisonbarb: 'Flecha Venenosa', softsand: 'Arena Fina', sharpbeak: 'Pico Afilado', twistedspoon: 'Cuchara Torcida', silverpowder: 'Polvo Plata', hardstone: 'Piedra Dura', spelltag: 'Hechizo', dragonfang: 'Colmillo Dragón', blackglasses: 'Gafas de Sol', metalcoat: 'Revestimiento Metálico', fairyfeather: 'Pluma Feérica', shellbell: 'Campana Concha', scopelens: 'Periscopio', widelens: 'Lupa', zoomlens: 'Telescopio', whiteherb: 'Hierba Blanca', mentalherb: 'Hierba Mental', bigroot: 'Raíz Grande', blacksludge: 'Lodo Negro', airballoon: 'Globo Helio', muscleband: 'Cinta Fuerte', wiseglasses: 'Gafas Especiales', metronome: 'Metrónomo', focusband: 'Cinta Focus', razorclaw: 'Garra Afilada', protectivepads: 'Paracontacto', covertcloak: 'Capa Furtiva', clearamulet: 'Amuleto Puro', loadeddice: 'Dado Trucado', heavydutyboots: 'Botas Gruesas', powerherb: 'Hierba Única', mirrorherb: 'Hierba Copia', throatspray: 'Espray Bucal', ejectbutton: 'Botón Escape', redcard: 'Tarjeta Roja' };
 for (const id of [...HELD_COMMON, ...HELD_RARE]) if (!ITEMS[id] && D.items.get(id).exists) ITEMS[id] = { cat: D.items.get(id).isBerry ? 'berry' : 'held', name: HELD_ES[id] || D.items.get(id).name, rare: HELD_RARE.includes(id) };
 const SHOP = ['oranberry', 'cheriberry', 'chestoberry', 'pechaberry', 'rawstberry', 'aspearberry', 'persimberry', 'ether', 'maxether', 'elixir', 'firestone', 'waterstone', 'thunderstone', 'leafstone'];
+// From the middle of the game money piles up (¥100 000+ by Fucsia): stronger berries and, from the 5th badge, rare held items
+for (const [id, price, badge] of [['sitrusberry', 400, 2], ['lumberry', 800, 3], ['leftovers', 15000, 5], ['lifeorb', 15000, 5], ['expertbelt', 12000, 5], ['assaultvest', 15000, 5], ['rockyhelmet', 12000, 5], ['focussash', 12000, 6], ['choiceband', 20000, 6], ['choicespecs', 20000, 6], ['choicescarf', 20000, 6], ['weaknesspolicy', 15000, 6]])
+  if (ITEMS[id]) { ITEMS[id].price ??= price; ITEMS[id].badge ??= badge; SHOP.push(id); }
 const itemName = id => ES.items[toID(id)]?.n || ITEMS[id]?.name || KEY_ITEMS[id]?.name || (D.items.get(id).exists ? (HELD_ES[id] || D.items.get(id).name) : id);
 const itemDesc = id => { const it = ITEMS[id]; if (!it) return KEY_ITEMS[id]?.desc || ''; if (it.cat === 'pp') return it.one ? `Restaura ${it.pp > 90 ? 'todos los' : it.pp} PP de un movimiento.` : `Restaura ${it.pp} PP de todos los movimientos.`; if (it.cat === 'evo') return 'Hace evolucionar a ciertos Pokémon.'; if (it.cat === 'sell') return `Se vende por ¥${it.sell} en la tienda.`; const d = D.items.get(id); return ES.items[toID(id)]?.d || (d.shortDesc || d.desc || '').slice(0, 120); };
 const sellPrice = id => ITEMS[id]?.sell ?? Math.floor((ITEMS[id]?.price || 400) / 2);
@@ -1188,13 +1220,14 @@ const DEFAULT_CFG = {
   dupes: true, shinyRate: 512, nicknames: false,
   catchMod: 'normal', evoSimplify: true, evoAuto: true, retreatChance: 40, doubles: 'some',
   rescue: true, rescueStart: 1, rescuePerGym: 1, rescueMax: 2,
+  grace: true, // faints before the first badge are not permanent
   express: false,
   seed: ''
 };
 const PRESETS = {
   classic: { name: 'Clásico', desc: 'Encuentros random, pero habilidades y movimientos reales.', cfg: { abilityRandom: false, movesRandom: false, tmRandom: false, legend: 'no' } },
   random: { name: 'Random guiado', desc: 'Recorrido guiado, encuentros y MT aleatorios; rescates opcionales.', cfg: {} },
-  hardcore: { name: 'Random Hardcore', desc: 'Muertes permanentes, límite de nivel y sin rescates.', cfg: { rescue:false, dupes:true } },
+  hardcore: { name: 'Random Hardcore', desc: 'Muertes permanentes, límite de nivel y sin rescates.', cfg: { rescue:false, grace:false, dupes:true } },
   chaos: { name: 'Caos', desc: 'Sin filtros: legendarios, habilidades rotas y potencia libre.', cfg: { legend: 'all', banBroken: false, banBad: false, powerScale: false, levelAppropriate: false, guaranteeDamage: false, stabBias: false, gymTypes: 'random', banSuicide: false, banOHKO: false } },
 };
 const randomSeed = () => 'KANTO-' + Math.floor(1000 + Math.random() * 9000);
@@ -1315,7 +1348,20 @@ let S = null;
 const cfg = () => (S && S.cfg) || DEFAULT_CFG;
 const SAVE_KEY = 'pokerandomoria-v2';
 const OLD_SAVE_KEY = 'randomlocke-kanto-v1';
-function save() { try { if (S) localStorage.setItem(SAVE_KEY, JSON.stringify(S)); } catch { } }
+// A failed write is never silent: the player is told to export (quota, private mode, blocked storage).
+// The first good save also asks the browser to keep the data (Safari erases idle sites' storage after 7 days).
+let saveFailedAt = 0, persistAsked = false;
+function save() {
+  if (!S) return true;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(S)); saveFailedAt = 0; }
+  catch { if (Date.now() - saveFailedAt > 60000) { saveFailedAt = Date.now(); toast('No se ha podido guardar en este navegador. Exporta tu partida desde Menú › Guardar / cargar archivo.', 6000); } return false; }
+  if (!persistAsked) { persistAsked = true; try { navigator.storage?.persist?.().catch(() => { }); } catch { } }
+  return true;
+}
+const BACKUP_KEY = SAVE_KEY + '-bak';
+function backupSave() { try { localStorage.setItem(BACKUP_KEY, JSON.stringify(S)); } catch { } }
+function loadBackup() { try { const s = localStorage.getItem(BACKUP_KEY); return s ? JSON.parse(s) : null; } catch { return null; } }
+const isSafariLike = () => { const ua = navigator.userAgent || ''; return /iPad|iPhone|iPod/.test(ua) || (/Safari\//.test(ua) && !/Chrome|Chromium|Edg|Android/.test(ua)); };
 function loadSave() { try { const s = localStorage.getItem(SAVE_KEY); return s ? JSON.parse(s) : null; } catch { return null; } }
 function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch { } }
 function hasOldSave() { try { return !!localStorage.getItem(OLD_SAVE_KEY); } catch { return false; } }
@@ -1332,7 +1378,12 @@ function calcStats(mon) {
   return st;
 }
 const curHP = mon => mon.hp == null ? hpMax(mon) : clamp(mon.hp, 0, hpMax(mon));
-const nameOf = mon => mon.nick || mon.species;
+// Species names in Spanish style: «Ponyta de Galar», «Nidoran♀» (other hyphenated names such as Ho-Oh stay as they are)
+function speciesLabel(name) {
+  const s = String(name || ''); if (s === 'Nidoran-F') return 'Nidoran♀'; if (s === 'Nidoran-M') return 'Nidoran♂';
+  const m = /^(.+?)-(Alola|Galar|Hisui|Paldea)\b/.exec(s); return m ? m[1] + ' de ' + m[2] : s;
+}
+const nameOf = mon => mon.nick || speciesLabel(mon.species);
 function randomAbility(rng, sp) {
   if (cfg().abilityRandom) return rng.pick(P.abilities).name;
   const abs = Object.values(sp.abilities).filter(Boolean); return rng.pick(abs);
@@ -8827,6 +8878,29 @@ const CAMPAIGN_BUDGET={captureZones:40,tms:50,otherItems:150,totalRewards:200};
 // League rules requested by the user: explain the exception before entry.
 for (const p of WORLD.liga.pois) if (p.kind === 'go' && p.to === 'alto-mando') p.warn = 'En la Liga las bajas son temporales y la plantilla queda fijada al entrar. Tendrás cuatro cargas de Pokévial, que también reviven a los debilitados. Si pierdes, tu equipo vuelve completo y curado, sin gastar rescates; el desafío empieza otra vez desde Lorelei y los premios del intento fallido no se acumulan.';
 
+// City residents: one person per city with local colour and the type of the next leader.
+// The type is read at talk time, so random gym types match the current run (same rule as leaderPoi).
+const LEADER_CITY = { brock: 'plateada', misty: 'celeste', surge: 'carmin', erika: 'azulona', koga: 'fucsia', sabrina: 'azafran', blaine: 'canela', giovanni: 'verde' };
+function nextLeaderHint(here) {
+  const id = Object.keys(LEADERS).find(k => LEADERS[k].badge === badges() + 1);
+  if (!id) return 'Con ocho medallas ya puedes ir a la Liga Pokémon: sigue por Ruta 23, al oeste de Ciudad Verde.';
+  const L = LEADERS[id], c = cfg(), who = L.name.startsWith('Teniente') ? 'el ' + L.name : L.name;
+  const type = c.gymTypes === 'none' ? null : c.gymTypes === 'random' ? new Rng(c.seed, 'gymtypes').shuffle(TYPES)[L.badge - 1] : L.type;
+  const intro = LEADER_CITY[id] === here ? 'El gimnasio de aquí lo dirige ' + who + '.' : 'Tu próxima medalla está en ' + WORLD[LEADER_CITY[id]].name + ', con ' + who + '.';
+  return intro + (type ? ' Dicen que usa Pokémon de tipo ' + TYPE_ES[type] + '.' : ' No se ciñe a un tipo: lleva un equipo variado.');
+}
+const CITY_RESIDENTS = {
+  verde: { x: 57, y: 46, sprite: 'chaval3', label: 'Chaval', text: '¡Hola! En Ciudad Verde nunca pasa nada… Bueno, el gimnasio lleva años cerrado y nadie sabe dónde anda su líder.' },
+  celeste: { x: 24, y: 35, sprite: 'campista', label: 'Campista', text: 'Al norte está el puente de Ruta 24. Sus entrenadores no dan tregua, pero el Centro queda a dos pasos: vuelve a curar entre combate y combate.' },
+  carmin: { x: 55, y: 29, sprite: 'chaval3', label: 'Chaval', text: '¡El S. S. Anne trae entrenadores de todo el mundo! En Carmín siempre huele a mar y a aventura.' },
+  lavanda: { x: 14, y: 30, sprite: 'campista', label: 'Campista', text: 'La Torre Pokémon está aquí al lado; allí descansan muchos Pokémon. Entra con el equipo curado: los fantasmas no avisan.' },
+  azulona: { x: 16, y: 42, sprite: 'chaval3', label: 'Chaval', text: '¡Los grandes almacenes de Azulona son enormes! Yo vengo a por refrescos para mi equipo.' },
+  fucsia: { x: 62, y: 37, sprite: 'campista', label: 'Campista', text: 'La Zona Safari está al norte. Sus praderas, su lago y su bosque esconden Pokémon que no verás en ningún otro sitio.' },
+  azafran: { x: 26, y: 41, sprite: 'chaval3', label: 'Chaval', text: '¡Gracias por echar a Eclipse de Silph S.A.! Por fin Azafrán vuelve a estar tranquila.' },
+  canela: { x: 63, y: 36, sprite: 'campista', label: 'Campista', text: 'En Isla Canela hay un volcán y un laboratorio que estudia fósiles. Dicen que el líder adora los acertijos.' }
+};
+for (const [id, r] of Object.entries(CITY_RESIDENTS)) WORLD[id].pois.push({ id: 'resident', kind: 'npc', x: r.x, y: r.y, sprite: r.sprite, dir: 'down', label: r.label, get text() { return [r.text, nextLeaderHint(id)]; } });
+
 // Restore rule-sensitive POIs before applying the saved campaign revision.
 const CAMPAIGN_BASE_POIS = Object.fromEntries(['r1','anne','diglett','torre','mansion','safari1','safari2','safari3'].map(id=>[id,WORLD[id].pois.map(p=>JSON.parse(JSON.stringify(p)))]));
 function syncCampaignRules() {
@@ -8954,7 +9028,7 @@ const ZONE_CHAPTERS = {
     ]
   },
   "mtmoon": {
-    "intro": "Eclipse se ha adentrado en Monte Moon. Los túneles esconden también un fósil.",
+    "intro": "Eclipse se ha adentrado en Monte Moon y tu rival Azul anda por las galerías del fondo. El Centro más cercano está en Ciudad Plateada, volviendo por Ruta 3: cura al equipo antes de buscarlo.",
     "steps": [
       "Galerías",
       "Eclipse y Azul",
@@ -8988,7 +9062,7 @@ const ZONE_CHAPTERS = {
     ]
   },
   "r24": {
-    "intro": "Los entrenadores del norte de Celeste ponen a prueba a quienes cruzan su ruta.",
+    "intro": "Los entrenadores del puente ponen a prueba a quienes cruzan al norte de Celeste. El Centro de Ciudad Celeste queda justo detrás: puedes volver a curar entre un combate y otro.",
     "steps": [
       "Primer aspirante",
       "Reto del norte",
@@ -9658,20 +9732,25 @@ function schedule() {
   }
 }
 // Recorded music: CC0 "JRPG Music Pack" loops by Juhani Junkala (SubspaceAudio), see assets/music/LICENCIA.txt.
-// Several loops per area; one is chosen each time the area type changes. Falls back to the synth theme if a file cannot load.
+// Several loops per area type: each zone always plays the same one (chosen from its id), so coming back from a battle
+// resumes the zone's theme. Each loop exists as Ogg Vorbis and AAC in .mp4 (Safari/iOS; claude.ai artifacts do not serve .m4a); falls back to the synth theme.
 const MUSIC_FILES = { home: ['home'], town: ['town1', 'town2'], route: ['route1', 'route2', 'route3'], forest: ['forest'], cave: ['cave'], center: ['center'], gym: ['gym'], battle: ['battle1', 'battle2'], wild: ['wild'], boss: ['boss1', 'boss2'] };
 const MUSIC_LEVEL = .8, MUSIC_FADE = .6;
+const MUSIC_EXT = (() => { try { return new Audio().canPlayType('audio/ogg; codecs="vorbis"') ? ['.ogg', '.mp4'] : ['.mp4', '.ogg']; } catch { return ['.ogg', '.mp4']; } })();
 AUDIO.bufs = new Map(); AUDIO.tok = 0; AUDIO.last = {};
+function fetchDecode(file, ext) { return fetch('assets/music/' + file + ext).then(r => { if (!r.ok) throw Error('music ' + r.status); return r.arrayBuffer(); }).then(b => AUDIO.ctx.decodeAudioData(b)); }
 function loadTrack(file) {
   let hit = AUDIO.bufs.get(file); if (hit) { AUDIO.bufs.delete(file); AUDIO.bufs.set(file, hit); return hit; }
-  hit = fetch('assets/music/' + file + '.ogg').then(r => { if (!r.ok) throw Error('music ' + r.status); return r.arrayBuffer(); }).then(b => AUDIO.ctx.decodeAudioData(b));
+  hit = fetchDecode(file, MUSIC_EXT[0]).catch(() => fetchDecode(file, MUSIC_EXT[1]));
   hit.catch(() => AUDIO.bufs.delete(file)); AUDIO.bufs.set(file, hit);
-  while (AUDIO.bufs.size > 2) AUDIO.bufs.delete(AUDIO.bufs.keys().next().value); // decoded loops are big: keep two
+  while (AUDIO.bufs.size > 3) AUDIO.bufs.delete(AUDIO.bufs.keys().next().value); // decoded loops are big (~40 MB): keep three
   return hit;
 }
 function pickTrack(track) {
-  const list = MUSIC_FILES[track] || [], last = AUDIO.last[track];
-  const pool = list.length > 1 ? list.filter(f => f !== last) : list; const file = pool[Math.floor(Math.random() * pool.length)];
+  const list = MUSIC_FILES[track] || []; if (list.length < 2) return list[0];
+  const at = typeof S !== 'undefined' && S?.at?.node;
+  // zone themes follow the zone; battle themes keep the last one half of the time so the decoded loop is reused
+  const file = ['battle', 'wild', 'boss'].includes(track) ? (AUDIO.last[track] && Math.random() < .5 ? AUDIO.last[track] : list[Math.floor(Math.random() * list.length)]) : list[Math.abs(at ? hashStr(at) : 0) % list.length];
   AUDIO.last[track] = file; return file;
 }
 function startSynth(track) { AUDIO.step = 0; AUDIO.next = AUDIO.ctx.currentTime + .08; AUDIO.timer = setInterval(schedule, 40); schedule(); }
@@ -9699,9 +9778,11 @@ function stopMusic() {
   if (AUDIO.music) { const g = AUDIO.music; try { g.gain.setTargetAtTime(0, AUDIO.ctx.currentTime, .12); } catch { } setTimeout(() => { try { src?.stop(); } catch { } g.disconnect(); }, 700); AUDIO.music = null; }
   AUDIO.track = null;
 }
-const SFX = { heal: [[72, 2], [76, 2], [79, 2], [84, 4]], throw: [[67, 1], [72, 1]], shake: [[55, 1]], caught: [[72, 2], [76, 2], [79, 2], [84, 2], [88, 4]], select: [[79, 1]], badge: [[72, 2], [76, 2], [79, 2], [84, 2], [79, 2], [84, 6]] };
+const SFX = { heal: [[72, 2], [76, 2], [79, 2], [84, 4]], throw: [[67, 1], [72, 1]], shake: [[55, 1]], caught: [[72, 2], [76, 2], [79, 2], [84, 2], [88, 4]], select: [[79, 1]], badge: [[72, 2], [76, 2], [79, 2], [84, 2], [79, 2], [84, 6]], faint: [[67, 2], [62, 2], [55, 2], [48, 5]] };
 function playSfx(id) {
-  if (!AUDIO.ctx || AUDIO.ctx.state !== 'running' || AUDIO.pref.muted) return; const seq = SFX[id]; if (!seq) return;
+  if (!AUDIO.ctx || AUDIO.ctx.state !== 'running' || AUDIO.pref.muted) return;
+  if (id === 'hit') { const t = AUDIO.ctx.currentTime + .01; drum(t, 'kick', .5); drum(t, 'hat', .18); tone(t, 40, .08, 'square', .05); return; }
+  const seq = SFX[id]; if (!seq) return;
   let t = AUDIO.ctx.currentTime + .02; for (const [n, l] of seq) { tone(t, n, l * .07, 'square', .07); t += l * .07; }
 }
 function audioUnlock() {
@@ -9845,12 +9926,12 @@ async function chooseMon(title, filter = () => true, from = 'party') {
 ACT.openMenu = () => { if ($('#modal #okbtn,#modal [data-ci],#modal #asktxt')) return; return modal(`<div class="modal-head"><h2>Menú</h2><button class="btn sm" data-a="closeModal" data-close>Volver</button></div>
   <div class="menu-grid">
     <button class="menu-btn" data-a="openTeam"><span class="mi mi-team"></span>Equipo</button>
-    <button class="menu-btn" data-a="openBag"><span class="mi mi-bag"></span>Mochila</button>
+    <button class="menu-btn" data-a="openBag"><span class="mi mi-bag"></span>Mochila${newTMs() ? ` <span class="small">· ${newTMs()} MT nueva${newTMs() === 1 ? '' : 's'}</span>` : ''}</button>
     <button class="menu-btn" data-a="openDex"><span class="mi mi-dex"></span>Pokédex</button>
     <button class="menu-btn" data-a="openMap" ${S.keys.townmap ? '' : 'disabled'}><span class="mi mi-map"></span>Mapa</button>
     <button class="menu-btn" data-a="openBadges"><span class="mi mi-badge"></span>Medallas</button>
     <button class="menu-btn" data-a="online"><span class="mi mi-friends"></span>Amigos</button>
-    <button class="menu-btn" data-a="saveTools"><span class="mi mi-log"></span>Guardar / cargar archivo</button><button class="menu-btn" data-a="openOptions"><span class="mi mi-opt"></span>Opciones</button>
+    <button class="menu-btn" data-a="saveTools"><span class="mi" style="background-image:url('assets/ui/menu-guardar.png')"></span>Guardar / cargar archivo</button><button class="menu-btn" data-a="openOptions"><span class="mi mi-opt"></span>Opciones</button>
     ${S.victory?'<button class="menu-btn" data-a="hallOfFame"><span class="mi mi-trophy"></span>Hall de la Fama</button>':''}<button class="menu-btn" data-a="openLog"><span class="mi mi-log"></span>Novedades</button>
   </div><p class="small muted">La partida se guarda sola después de cada acción.</p>`); };
 
@@ -9891,9 +9972,9 @@ function monDetail(m) {
     <button class="btn sm ghost" data-a="rename" data-uid="${m.uid}">Mote</button>
     ${inPc ? (TEAM.tab === 'party' ? `<button class="btn sm ghost" data-a="toBox" data-uid="${m.uid}" ${S.party.length > 1 ? '' : 'disabled'}>Dejar en la caja</button>` : `<button class="btn sm ghost" data-a="toParty" data-uid="${m.uid}" ${S.party.length < 6 ? '' : 'disabled'}>Llevar al equipo</button>`) : ''}`}
   </div>`;
-  return `<div class="mon-profile" style="--species-color:${TYPE_COL[sp.types[0]] || '#648ca8'}"><div class="detail-top"><div class="profile-label">${dead ? 'RECUERDO' : 'FICHA POKÉMON'} <span>No. ${String(sp.num).padStart(3,'0')}</span></div><div class="detail-spr" id="detail-spr">${icon(m.species, 'x2')}</div><div><b class="name">${esc(nameOf(m))}${m.shiny ? ' ★' : ''}</b>${m.nick ? ` <span class="small muted">${esc(m.species)}</span>` : ''}<div class="small num">${regionalLabel(sp)?esc(regionalLabel(sp))+' · ':''}Nv ${m.level} · ${NAT_ES[m.nature] || m.nature} · Potencial ${Math.round(ivt / 186 * 100)}%</div><div class="row tight">${sp.types.map(typeChip).join('')}${statusChip(m.status)}</div><button class="btn sm" data-a="evolutionGuide" data-uid="${m.uid}">Evoluciones</button></div></div>
+  return `<div class="mon-profile" style="--species-color:${TYPE_COL[sp.types[0]] || '#648ca8'}"><div class="detail-top"><div class="profile-label">${dead ? 'RECUERDO' : 'FICHA POKÉMON'} <span>No. ${String(sp.num).padStart(3,'0')}</span></div><div class="detail-spr" id="detail-spr">${icon(m.species, 'x2')}</div><div><b class="name">${esc(nameOf(m))}${m.shiny ? ' ★' : ''}</b>${m.nick ? ` <span class="small muted">${esc(m.species)}</span>` : ''}<div class="small num">${regionalLabel(sp)?esc(regionalLabel(sp))+' · ':''}Nv ${m.level} · ${NAT_ES[m.nature] || m.nature} · <span title="Suma de sus valores ocultos (IV): cuánto destacan sus estadísticas frente a otros de su especie">Potencial ${Math.round(ivt / 186 * 100)}%</span></div><div class="row tight">${sp.types.map(typeChip).join('')}${statusChip(m.status)}</div><button class="btn sm" data-a="evolutionGuide" data-uid="${m.uid}">Evoluciones</button></div></div>
     <div class="mon-record"><div class="small ability-block"><span class="label">Habilidad</span> <b>${esc(abilityName(m.ability))}</b> <span class="muted">${esc(abilityDescription(m.ability))}</span></div>
-    <div class="small"><span class="label">Objeto</span> ${m.item ? esc(itemName(toID(m.item))) : '—'} · <span class="label">Origen</span> ${esc(m.met || '')}</div>
+    <div class="small"><span class="label">Objeto</span> ${m.item ? esc(itemName(toID(m.item))) : '—'} · <span class="label">Origen</span> ${esc(m.met || '—')}</div>
     <div class="record-heading">MOVIMIENTOS</div><ul class="moves-list">${moves}</ul>
     <details><summary class="small">Estadísticas</summary><div class="stats">${stats}</div></details><div class="record-heading">GESTIONAR</div>${acts}</div></div>`;
 }
@@ -9936,6 +10017,8 @@ ACT.remind = async d => {
 // ---------- bag ----------
 let BAGUI = { cat: 'berry', sel: null };
 ACT.openBag = () => drawBag();
+// TMs received since the player last opened the MT pocket (shown in the menu)
+const newTMs = () => Math.max(0, (S?.tms?.length || 0) - (S?.tmsSeen ?? S?.tms?.length ?? 0));
 function bagItems(cat) {
   if (cat === 'tm') return S.tms.map(id => ({ id, tm: true }));
   if (cat === 'key') return Object.keys(S.keys).map(id => ({ id, key: true }));
@@ -9949,7 +10032,7 @@ function drawBag() {
     <div class="tabs">${BAG_CATS.map(([k, l]) => `<button class="tab ${BAGUI.cat === k ? 'on' : ''}" data-a="bagCat" data-k="${k}">${l}</button>`).join('')}</div>
     <div class="bag-layout"><div class="bag-inventory"><div class="pocket-banner"><img src="assets/ui/bag_1.png" alt=""><div><span>BOLSILLO</span><b>${BAG_CATS.find(([k])=>k===BAGUI.cat)?.[1] || 'Mochila'}</b><span>${list.length} ${BAGUI.cat==='tm'?'MT disponibles':'tipos de objeto'}</span></div></div><div class="bag-list">${list.map(x => `<button class="bag-row ${x.id === BAGUI.sel ? 'on' : ''}" data-a="bagSel" data-id="${x.id}">${x.tm ? `<span class="tm-name"><span class="tdot" style="background:${TYPE_COL[D.moves.get(x.id).type]}"></span>MT · ${esc(moveName(x.id))}</span><span class="tm-peers" data-tm-peers="${x.id}" aria-label="Comprobando compatibilidad">${S.party.map(m=>tmPeerHTML(m,'loading')).join('')}</span>` : `${itemIcon(x.id)}<span>${esc(itemName(x.id))}</span>${x.n ? `<b class="num">×${x.n}</b>` : ''}`}</button>`).join('') || '<p class="muted small">Vacío.</p>'}</div></div><div class="bag-detail">${detail}</div></div>
     <div class="bag-foot">${S.keys.pokevial ? `<span>Pokévial ${S.vials}/${vialCapacity()}</span>` : ''}<span class="muted small">Las Balls son ilimitadas y se lanzan en combate.</span></div>`, 'wide');
-  if(BAGUI.cat === 'tm') fillTMCompatibility();
+  if(BAGUI.cat === 'tm') { fillTMCompatibility(); if (S.tmsSeen !== S.tms.length) { S.tmsSeen = S.tms.length; save(); } }
 }
 ACT.bagCat = d => { BAGUI.cat = d.k; BAGUI.sel = null; drawBag(); };
 ACT.bagSel = d => { BAGUI.sel = d.id; drawBag(); };
@@ -10082,6 +10165,7 @@ function drawNewGame() {
       ${optSwitch('nicknames', 'Poner mote al capturar')}
     </div></details>
     <details class="config-group"><summary><b>Segunda oportunidad</b><small>Rescates opcionales</small></summary><div class="config-body">
+      ${optSwitch('grace', 'Hasta la 1.ª medalla las caídas no cuentan', 'Antes de vencer a Brock, un Pokémon debilitado no muere; si cae todo el equipo, vuelves al último Centro')}
       ${optSwitch('rescue', 'Activada', 'Si no te queda ningún Pokémon vivo, gasta una carga para revivir a uno del cementerio')}
       ${optSelect('rescueStart', 'Cargas iniciales', [[0, '0'], [1, '1']])}${optSelect('rescuePerGym', 'Cargas por gimnasio', [[1, '1'], [2, '2']])}${optSelect('rescueMax', 'Máximo guardado', [[1, '1'], [2, '2'], [99, 'Sin límite']])}
     </div></details></div>` : ''}
@@ -10098,7 +10182,7 @@ ACT.ngStart = async () => {
   if (loadSave()) { const ok = await choose('Ya tienes una partida', '<p>Empezar de nuevo borrará la partida guardada.</p>', [{ v: 'y', html: '<b>Empezar de nuevo</b>' }, { v: 'n', html: '<b>Cancelar</b>' }], true); if (ok !== 'y') return drawNewGame(); }
   newGame(NG.cfg, { ...NG.player });
   playMusic('home');
-  await info('Profesor Oak', `<p>¡Hola, ${esc(S.player.name)}! Bienvenido al mundo de los Pokémon.</p><p>Hoy empieza tu aventura por Kanto. Cada zona te dará una única oportunidad de capturar un Pokémon, y si uno cae en combate… no volverá.</p><p>Ven a verme a mi laboratorio. ¡Te espero!</p>`);
+  await info('Profesor Oak', `<p>¡Hola, ${esc(S.player.name)}! Bienvenido al mundo de los Pokémon.</p><p>Hoy empieza tu aventura por Kanto. Cada zona te dará una única oportunidad de capturar un Pokémon, y si uno cae en combate… no volverá.</p>${S.cfg.grace !== false ? '<p>Hasta que consigas tu primera medalla, eso sí, te echaré una mano: un Pokémon debilitado podrá recuperarse.</p>' : ''}<p>Ven a verme a mi laboratorio. ¡Te espero!</p>`);
   render();
 };
 
@@ -10290,9 +10374,10 @@ addEventListener('resize',()=>{if(S&&$('#detail-spr'))requestAnimationFrame(()=>
 
 // Portable backup for moving between the artifact, localhost and a shared host.
 ACT.saveTools=()=>{
- const snapshot=S||loadSave();modal('<div class="modal-head"><h2>Archivo de partida</h2><button class="btn sm" data-a="closeModal">Volver</button></div><p>La partida se guarda automáticamente en este navegador. Un archivo te permite llevarla a otro dispositivo o enlace.</p><div class="stack"><button class="btn primary" data-a="downloadSave" '+(!snapshot?'disabled':'')+'>Descargar mi partida</button><label class="opt"><span><b>Cargar una partida</b><br><span class="small muted">Archivo JSON de PokéDestino</span></span><input id="save-file" type="file" accept=".json,application/json"></label></div>');
+ const snapshot=S||loadSave();modal('<div class="modal-head"><h2>Archivo de partida</h2><button class="btn sm" data-a="closeModal">Volver</button></div><p>La partida se guarda automáticamente en este navegador. Un archivo te permite llevarla a otro dispositivo o enlace.</p><div class="stack"><button class="btn primary" data-a="downloadSave" '+(!snapshot?'disabled':'')+'>Descargar mi partida</button><label class="opt"><span><b>Cargar una partida</b><br><span class="small muted">Archivo JSON de PokéDestino</span></span><input id="save-file" type="file" accept=".json,application/json"></label>'+(loadBackup()?'<button class="btn" data-a="restoreBackup">Recuperar la copia de la última medalla</button><span class="small muted">'+esc(loadBackup().player?.name||'')+' · '+(loadBackup().badges||0)+' medallas. Sustituye la partida actual; esta se conserva como copia anterior.</span>':'')+'</div>');
  $('#save-file').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>8*1024*1024)throw Error('El archivo es demasiado grande.');await importRun(JSON.parse(await file.text()));}catch(err){toast('No se ha cargado: '+(err.message||'archivo inválido'));}};
 };
+ACT.restoreBackup=async()=>{const b=loadBackup();if(!b)return;try{await importRun(b);}catch(err){toast('No se ha recuperado: '+(err.message||'copia inválida'));}};
 // Inside claude.ai the viewer only lets a page save files through the downloads capability
 // (it asks the player to confirm); on the local server a plain download link works.
 ACT.downloadSave=async()=>{
@@ -10389,7 +10474,7 @@ function buildTmPlan() {
 function newGame(c, player) {
   const seed = (c.seed || '').trim() || randomSeed();
   S = { v: 2, guidedVersion: 1, cfg: { ...DEFAULT_CFG, ...c, seed }, player, rivalName: 'Azul', at: { node: 'casa2f', x: WORLD.casa2f.spawn[0], y: WORLD.casa2f.spawn[1], dir: 'down' },
-    visited: { casa2f: 1 }, done: {}, enc: {}, flags: {}, party: [], box: [], dead: [], bag: {}, keys: {}, tms: [], money: 3000, badges: 0,
+    visited: { casa2f: 1 }, done: {}, enc: {}, flags: {}, party: [], box: [], dead: [], bag: {}, keys: {}, tms: [], tmsSeen: 0, money: 3000, badges: 0,
     caught: [], seen: [], obtained: [], pending: [], log: [], vials: 0, lastCenter: null, rescue: { charges: c.rescue === false ? 0 : (c.rescueStart ?? 1), revived: [] },
     rival: null, uid: 1, started: Date.now(), trades: [] };
   syncCampaignRules(); buildPools();
@@ -10533,6 +10618,16 @@ const ROUTE_SITUATIONS = {
   safari2:'La expedición continúa por la segunda zona del Safari.',
   safari3:'Has llegado a la última zona del Safari.'
 };
+// after a win: what comes next (the zone intro would still invite you to the fight you just won)
+function nextStepText() {
+  if (inLeagueChallenge()) return stripIntro();
+  const p = mainDecision()?.p;
+  if (!p) return 'Puedes revisar lo que queda en esta zona.';
+  if (p.kind === 'go') return `Camino despejado: puedes seguir hacia ${WORLD[p.to]?.name || p.label}.`;
+  if (p.kind === 'leader') return 'Siguiente: el líder del gimnasio. Prepara el equipo antes de entrar.';
+  if (p.kind === 'trainer' || p.kind === 'rival') return 'Siguiente: otro combate te espera en esta zona.';
+  return `Siguiente: ${p.label}.`;
+}
 function stripIntro() {
   const main=mainDecision(),p=main?.p;
   if(inLeagueChallenge())return 'Liga Pokémon: tu equipo queda fijado y las bajas son temporales. '+(S.leagueAttempt?.fainted.length||0)+' debilitados.';
@@ -10779,6 +10874,19 @@ async function travel(to, at, opts = {}) {
   save(); playMusic(n.bgm); render();
   await processPending(); if (to === 'alto-mando') beginLeagueAttempt(); save();
   if (!B) render();
+  if (to === 'centro-liga' && !B && !S.leagueAttempt && !S.victory) await leagueChecklist();
+}
+// Before the League: what preparation is still on the table (the League depends on it far more than on levels)
+async function leagueChecklist() {
+  const taught = new Set(S.party.flatMap(m => m.moves));
+  const tms = S.tms.filter(id => !taught.has(id)).length;
+  const held = Object.keys(S.bag).filter(id => ['held', 'berry'].includes(ITEMS[id]?.cat) && S.bag[id] > 0).length;
+  const bare = held ? S.party.filter(m => !m.item).length : 0;
+  const evos = S.party.filter(m => evolutionCandidates(m).length || Object.keys(S.bag).some(id => S.bag[id] > 0 && evolutionCandidates(m, id).length)).length;
+  const rows = [[tms, `MT que nadie de tu equipo conoce: <b>${tms}</b>`, 'bag'], [bare, `Pokémon sin objeto equipado: <b>${bare}</b>`, 'team'], [evos, `Pokémon que pueden evolucionar: <b>${evos}</b>`, 'team']].filter(r => r[0]);
+  if (!rows.length) return;
+  const r = await choose('Antes de la Liga', `<p>El Alto Mando no perdona: aprovecha lo que has reunido por el camino.</p><ul>${rows.map(x => `<li>${x[1]}</li>`).join('')}</ul><p class="small muted">Dentro del desafío tendrás 4 cargas del Pokévial, que además reviven. Un equipo preparado gana muchas más veces que uno solo con nivel.</p>`, [{ v: 'bag', html: '<b>Abrir la mochila</b>' }, { v: 'team', html: '<b>Revisar el equipo</b>' }, { v: 'ok', html: '<b>Más tarde</b>' }], true);
+  if (r === 'bag') { if (tms) BAGUI.cat = 'tm'; ACT.openBag(); } else if (r === 'team') ACT.openTeam();
 }
 ACT.retreat = async () => {
   if (ADV.busy || B || !S.lastCenter) return;
@@ -10841,16 +10949,16 @@ async function encounter(id, p, bush) {
 }
 async function afterWild(res, id) {
   const e = S.enc[id]; const wild = e.mon;
-  const deaths = applyResults({ ...res, cause: `Derrotado por ${wild.species} salvaje` });
+  const deaths = applyResults({ ...res, cause: `Derrotado por ${speciesLabel(wild.species)} salvaje` });
   if (res.caught) {
     const m = { ...wild, hp: res.foeHp, status: res.foeStatus || '', pp: null };
     if (S.cfg.nicknames) { const nk = await askText(`Ponle un mote a ${m.species}`, m.species); if (nk) m.nick = nk.slice(0, 12); }
     addMon(m); e.state = 'caught'; logEvent(`Capturó a ${m.species} en ${node(id).name}.`); save();
-    await info(`¡${esc(m.species)} capturado!`, `<div class="row">${icon(m.species, 'x2')}<div><p>Habilidad: <b>${esc(abilityName(m.ability))}</b> · ${NAT_ES[m.nature]}</p><div class="movechips">${m.moves.map(moveChip).join('')}</div></div></div>${S.party.includes(m) ? '' : '<p class="muted">Tu equipo está lleno: va a la caja del PC.</p>'}${deathList(deaths)}${captureRevealHTML(e)}`);
+    await info(`¡${esc(speciesLabel(m.species))} capturado!`, `<div class="row">${icon(m.species, 'x2')}<div><p>Habilidad: <b>${esc(abilityName(m.ability))}</b> · ${NAT_ES[m.nature]}</p><div class="movechips">${m.moves.map(moveChip).join('')}</div></div></div>${S.party.includes(m) ? '' : '<p class="muted">Tu equipo está lleno: va a la caja del PC.</p>'}${deathList(deaths)}${captureRevealHTML(e)}`);
   } else {
     e.state = res.fled ? 'fled' : 'failed'; save();
     if (await checkWipe()) return;
-    await info(res.fled ? 'Has huido' : res.won ? `${esc(wild.species)} se ha debilitado` : 'Has perdido', `<p>Has perdido el encuentro de ${esc(node(id).name)}.</p>${deathList(deaths)}${captureRevealHTML(e)}`);
+    await info(res.fled ? 'Has huido' : res.won ? `${esc(speciesLabel(wild.species))} se ha debilitado` : 'Has perdido', `<p>Has perdido el encuentro de ${esc(node(id).name)}.</p>${deathList(deaths)}${captureRevealHTML(e)}`);
   }
   save(); render();
 }
@@ -10918,11 +11026,13 @@ async function afterTrainer(res, id, p, money) {
     if (p.elite && !S.over) { await info('Fuera de la Liga', '<p>El desafío vuelve a empezar desde el primer miembro del Alto Mando. Vuelves al Centro de la Liga para curar y preparar a tu equipo.</p>'); await travel(WORLD['centro-liga'] ? 'centro-liga' : S.lastCenter); }
     save(); render(); return;
   }
+  const unlockedBefore = trainingUnlockedLevel();
   S.done[poiKey(id, p.id)] = 'won'; S.money += money;
   if (leagueBattle && id === 'campeon') finishLeagueAttempt();
   const n = WORLD[id]; S.pending.push(...(p.trainTo ? trainPartyTo(p.trainTo) : gainLevels(n.lv ? n.lv[1] : capNow())));
   save();
-  await info('¡Has ganado!', `<p>Recibes <b>¥${money}</b>.</p><p>Preparación desbloqueada: Nv ${trainingUnlockedLevel()}. ${esc(stripIntro())}</p>${deathList(deaths, leagueBattle)}`);
+  const unlocked = trainingUnlockedLevel() > unlockedBefore ? `Preparación desbloqueada: Nv ${trainingUnlockedLevel()}. ` : '';
+  await info('¡Has ganado!', `<p>Recibes <b>¥${money}</b>.</p><p>${unlocked}${esc(nextStepText())}</p>${deathList(deaths, leagueBattle)}`);
   if (p.after) await say(p.after);
   if (p.reward) await grantPoiReward(id, p, 'r');
   // a win where your last Pokémon also fell (recoil, simultaneous KO) still empties the team
@@ -10977,7 +11087,9 @@ async function starterPoi(id, p) {
   await say(p.text);
   const rng = new Rng(S.cfg.seed, 'starter');
   const pool = P.wild.filter(s => !s.prevo && evosOf(s).length && !legendKind(s));
-  const three = pool.filter(s => evosOf(s).some(e => evosOf(e).length)); const base = three.length > 10 ? three : pool;
+  // with «banBad» on, no starter that is too weak to fight at level 5 (Weedle, Caterpie, Ralts, Azurill…)
+  const strong = s => !S.cfg.banBad || s.bst > 250;
+  const three = pool.filter(s => evosOf(s).some(e => evosOf(e).length) && strong(s)); const base = three.length > 10 ? three : pool.filter(strong).length >= 3 ? pool.filter(strong) : pool;
   const picks = []; while (picks.length < 3) { const s = rng.pick(base); if (!picks.includes(s)) picks.push(s); }
   if (!S.starterOpts) { S.starterOpts = []; for (const sp of picks) S.starterOpts.push(await makeMon(new Rng(S.cfg.seed, 'starter', sp.id), sp, 5, { met: 'Pueblo Paleta' })); save(); }
   const opts = S.cfg.starterMode === 'one' ? S.starterOpts.slice(0, 1) : S.starterOpts;
@@ -11047,6 +11159,8 @@ ACT.useVial = () => {
 const maxPP = id => Math.floor((D.moves.get(id).pp || 5) * 8 / 5);
 
 // ---------- results, wipes, rescues ----------
+// before the first badge a faint is not permanent (option «grace», on by default; off in Hardcore)
+const graceActive = () => S.cfg.grace !== false && badges() === 0 && !inLeagueChallenge();
 function applyResults(res) {
   const league = inLeagueChallenge() ? beginLeagueAttempt() : null;
   const deaths = [];
@@ -11054,6 +11168,13 @@ function applyResults(res) {
     const m = findMon(r.uid); if (!m) continue;
     m.hp = r.hp; m.status = r.status || ''; m.item = r.item || null; if (r.pp) m.pp = r.pp;
     if (r.fainted) deaths.push(m);
+  }
+  delete S.graceWhiteout;
+  if (deaths.length && graceActive()) {
+    // the fainted stay in the team with 1 PS; if the whole team fell, checkWipe sends you to heal
+    for (const m of deaths) { m.hp = 1; m.status = ''; logEvent(`${nameOf(m)} se debilitó (antes de la 1.ª medalla no cuenta).`); }
+    if (S.party.every(m => deaths.includes(m))) S.graceWhiteout = true;
+    const spared = []; spared.spared = deaths; return spared;
   }
   for (const m of deaths) {
     S.party = S.party.filter(x => x !== m); m.hp = 0;
@@ -11067,6 +11188,11 @@ function applyResults(res) {
   return deaths;
 }
 async function checkWipe() {
+  if (S.graceWhiteout) {
+    delete S.graceWhiteout; for (const m of S.party) healMonFully(m); save();
+    await info('Tu equipo se ha debilitado', '<p>Antes de tu primera medalla las caídas no cuentan: nadie se pierde para siempre.</p><p>Vuelves corriendo a curar a tus Pokémon. A partir de la medalla de Brock, cada caída será definitiva.</p>');
+    await travel(S.lastCenter || 'casa1f'); return true;
+  }
   if (S.party.length) return false;
   if (S.box.length) { S.party = S.box.splice(0, 6); save(); await info('Tu equipo ha caído', '<p>Sacas a los Pokémon de tu caja para seguir.</p>'); render(); return true; }
   const can = S.cfg.rescue && S.rescue.charges > 0 && S.dead.some(m => !S.rescue.revived.includes(m.uid));
@@ -11082,7 +11208,9 @@ async function checkWipe() {
   }
   S.over = { at: node().name, when: Date.now() }; save(); render(); return true;
 }
-function deathList(deaths, temporary = false) { return deaths.length ? `<div class="deaths"><b>${temporary ? 'Debilitados en esta prueba' : 'Caídos para siempre'}</b><div class="row">${deaths.map(m => `<span class="row">${icon(m.species)}${esc(nameOf(m))}</span>`).join('')}</div></div>` : ''; }
+function deathList(deaths, temporary = false) {
+  if (deaths.spared?.length) return `<div class="deaths"><b>Debilitados · antes de la 1.ª medalla no cuentan</b><div class="row">${deaths.spared.map(m => `<span class="row">${icon(m.species)}${esc(nameOf(m))}</span>`).join('')}</div><p class="small muted">Siguen en tu equipo con 1 PS. Cúralos antes de seguir.</p></div>`;
+  return deaths.length ? `<div class="deaths"><b>${temporary ? 'Debilitados en esta prueba' : 'Caídos para siempre'}</b><div class="row">${deaths.map(m => `<span class="row">${icon(m.species)}${esc(nameOf(m))}</span>`).join('')}</div></div>` : ''; }
 async function processPending() {
   while (S.pending.length) {
     const p = S.pending.shift(); const m = findMon(p.uid); if (!m) continue;
@@ -11184,8 +11312,8 @@ const L = LEADERS[p.leader];
     if (S.cfg.rescue) S.rescue.charges = Math.min(S.cfg.rescueMax || 99, S.rescue.charges + (S.cfg.rescuePerGym ?? 1));
     for (const m of S.party) S.pending.push(...setLevel(m, Math.max(m.level, Math.min(L.cap, m.level + 3))));
     const tm = S.tmPlan[L.tm]; if (!S.tms.includes(tm)) S.tms.push(tm);
-    logEvent(`Venció a ${L.name} y consiguió la medalla ${L.badge}.`); save();
-    await info(`¡Has vencido a ${L.name}!`, `<p>${esc(L.after)}</p><p>Medalla ${L.badge}/8 · Recibes <b>¥${money}</b> y la <b>MT · ${esc(moveName(tm))}</b>.</p>${S.cfg.rescue ? `<p class="small muted">Segunda oportunidad: ${S.rescue.charges} carga${S.rescue.charges === 1 ? '' : 's'}.</p>` : ''}${deathList(deaths)}`);
+    logEvent(`Venció a ${L.name} y consiguió la medalla ${L.badge}.`); save(); backupSave();
+    await info(`¡Has vencido a ${L.name}!`, `<p>${esc(L.after)}</p><p>Medalla ${L.badge}/8 · Recibes <b>¥${money}</b> y la <b>MT · ${esc(moveName(tm))}</b>.</p>${S.cfg.rescue ? `<p class="small muted">Segunda oportunidad: ${S.rescue.charges} carga${S.rescue.charges === 1 ? '' : 's'}.</p>` : ''}${deathList(deaths)}${isSafariLike() ? '<p class="small muted">Consejo: Safari borra los datos de las webs que no visitas en una semana. Exporta tu partida desde Menú › Guardar / cargar archivo.</p>' : ''}`);
     const rng = new Rng(S.cfg.seed, id, 'prize'); const opts = rng.shuffle(HELD_RARE).slice(0, 3);
     const pick = await choose('Premio del gimnasio', '<p>Elige un objeto.</p>', opts.map(o => ({ v: o, html: `<div class="row">${itemIcon(o)}<b>${esc(itemName(o))}</b></div><span class="small muted">${esc(itemDesc(o))}</span>` })), true);
     addBag(pick, 1); S.done[poiKey(id, 'prize')] = pick;
@@ -11376,9 +11504,11 @@ let readUntil = 0;
 // top, scaled as one unit. Positions are the bottom-centre of each battler, from Añil's
 // Battle::Scene.pbBattlerPosition, shifted by the crop. Databoxes are real-size HTML over the stage.
 const STAGE_W = 512; let STAGE_H = 288;
-// phones get a taller window (512×352); doubles crop less from the top: the back foe stands higher
+// portrait phones show the whole 512×384 background and may crop its sides down to STAGE_MINW px
 const narrowStage = () => innerWidth <= 640 && innerHeight > innerWidth;
-const stageY = () => narrowStage() ? (B && B.doubles ? 0 : 16) : B && B.doubles ? 16 : 40;
+const NARROW_H = 384;
+const STAGE_MINW = dbl => dbl ? 440 : 360;
+const stageY = () => narrowStage() ? 0 : B && B.doubles ? 16 : 40;
 const BATTLER_POS = { single: { 'me-a': [128, 304], 'foe-a': [384, 176] }, double: { 'me-a': [80, 304], 'me-b': [160, 320], 'foe-a': [432, 176], 'foe-b': [352, 160] } };
 const ST_ES = { brn: 'QUE', par: 'PAR', psn: 'ENV', tox: 'ENV', slp: 'DOR', frz: 'CON' };
 function slotEl(pos) { return document.querySelector(`.slot[data-pos="${pos}"]`); }
@@ -11391,12 +11521,13 @@ function slotHtml(pos) {
 }
 function stageScale() {
   const wrap = $('#stagewrap'); if (!wrap) return 1;
-  return Math.min(wrap.clientWidth / STAGE_W, wrap.clientHeight / STAGE_H) || 1;
+  const minW = narrowStage() ? STAGE_MINW(B && B.doubles) : STAGE_W;
+  return Math.min(wrap.clientWidth / minW, wrap.clientHeight / STAGE_H) || 1;
 }
 // contain-fit the stage in its wrap; the databox layer follows the stage's on-screen rectangle
 function fitStage() {
   const st = $('#stage'), wrap = $('#stagewrap'); if (!st || !wrap) return;
-  const height = narrowStage() ? 352 : 288;
+  const height = narrowStage() ? NARROW_H : 288;
   if (height !== STAGE_H) {
     STAGE_H = height; st.style.height = height + 'px';
     st.querySelector('.bb').style.top = -stageY() + 'px';
@@ -11408,7 +11539,9 @@ function fitStage() {
   const k = stageScale();
   const w = STAGE_W * k, h = STAGE_H * k, l = (wrap.clientWidth - w) / 2, t = (wrap.clientHeight - h) / 2;
   st.style.transform = `translate(${l}px,${t}px) scale(${k})`;
-  const d = $('#dboxes'); if (d) Object.assign(d.style, { left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px' });
+  // databoxes follow the visible part of the stage (its sides may be cropped on phones)
+  const vl = Math.max(l, 0), vw = Math.min(w, wrap.clientWidth);
+  const d = $('#dboxes'); if (d) Object.assign(d.style, { left: vl + 'px', top: t + 'px', width: vw + 'px', height: h + 'px' });
 }
 let stageObserver;
 addEventListener('resize', () => { if (B) fitStage(); });
@@ -11419,9 +11552,9 @@ function renderBattle() {
   const dbl = !!B.doubles; const bb = o.bb || (o.kind === 'pvp' ? 'Pradera' : 'Pradera');
   const sprites = ['foe-b', 'foe-a', 'me-b', 'me-a'].filter(p => dbl || p.endsWith('a')).map(p => `<div class="mon-sprite ${p.startsWith('me') ? 'back' : 'front'}" data-pos="${p}" hidden><div class="spr"></div></div>`).join('');
   const foeTitle = o.kind === 'wild' ? (o.legendary ? 'Encuentro legendario' : 'Pokémon salvaje') : o.kind === 'pvp' ? `${esc(o.meLabel)} contra ${esc(o.foeName)}` : esc(o.foeName);
-  STAGE_H = narrowStage() ? 352 : 288;
+  STAGE_H = narrowStage() ? NARROW_H : 288;
   app().innerHTML = `<section class="battle screen">
-    <div class="stagewrap" id="stagewrap" style="--bb:url('assets/bb/${bb}.png');--sh:${STAGE_H}"><div class="stage" id="stage" style="height:${STAGE_H}px"><img class="bb" style="top:-${stageY()}px" src="assets/bb/${bb}.png" alt="" onerror="this.src='assets/anil/battle-forest.png'">
+    <div class="stagewrap" id="stagewrap" style="--bb:url('assets/bb/${bb}.png');--sh:${STAGE_H};--sar:${STAGE_MINW(dbl) / NARROW_H}"><div class="stage" id="stage" style="height:${STAGE_H}px"><img class="bb" style="top:-${stageY()}px" src="assets/bb/${bb}.png" alt="" onerror="this.src='assets/anil/battle-forest.png'">
       <div class="arena" id="arena">${sprites}<div class="fx-layer" id="fx" aria-hidden="true"></div></div></div>
       <div class="dboxes" id="dboxes"><div class="dbx foe">${slotHtml('foe-a')}${dbl ? slotHtml('foe-b') : ''}</div><div class="dbx me">${slotHtml('me-a')}${dbl ? slotHtml('me-b') : ''}</div></div>
       <div class="b-tag vh"><span>${esc(o.title || '')}${dbl ? ' · doble' : ''}</span><b>${foeTitle}</b></div>
@@ -11439,9 +11572,12 @@ function renderBattle() {
 // animated Añil strip inside .spr; falls back to the static sheet until the pack arrives
 async function paintSprite(pos, v) {
   const el = sprEl(pos); if (!el) return; const me = pos.startsWith('me'); const dbl = !!B.doubles;
-  const [bx, by0] = BATTLER_POS[dbl ? 'double' : 'single'][pos]; const by = by0 - stageY();
+  const [bx0, by0] = BATTLER_POS[dbl ? 'double' : 'single'][pos]; const by = by0 - stageY();
+  // portrait phones crop the stage sides: pull the player's side inwards so it stays in view
+  const bx = bx0 + (narrowStage() && me ? (STAGE_W - STAGE_MINW(dbl)) / 2 : 0);
   const key = v.species + (v.shiny ? '*' : ''); if (el.dataset.key === key) return; el.dataset.key = key;
-  const m = metricsOf(v.species); const scale = me ? 3 : 2;
+  // back sprites at 2.5× (Añil uses 3×): still larger than the foe for depth, but less blocky next to the 2× front
+  const m = metricsOf(v.species); const scale = me ? 2.5 : 2;
   const place = (size, mx, my) => { el.style.width = el.style.height = size + 'px'; el.style.left = (bx - size / 2 + mx) + 'px'; el.style.top = (by - size + my) + 'px'; el.style.zIndex = Math.round(by); };
   const spot = el.querySelector('.spr');
   place(me ? 288 : 192, 0, 0); spot.innerHTML = spr(v.species, me ? 'back' : 'front', me ? 288 : 192);
@@ -11585,6 +11721,7 @@ async function playEvent(ev) {
     }
     case 'damage': {
       const multi = B.lastWasDamage === ev.pos && !ev.residual;
+      if (!ev.residual && !fastForward) playSfx('hit');
       setView(ev.pos, { hp: ev.hp, ...(ev.max ? { max: ev.max } : {}), status: ev.status });
       if (ev.residual) { if (ev.text) pushLog(ev.text); await fxAura(sprEl(ev.pos), STATUS_COL[B.view[ev.pos]?.status] || '#d44'); }
       else playClass(sprEl(ev.pos), 'hit', 420);
@@ -11598,7 +11735,7 @@ async function playEvent(ev) {
       await fxAura(sprEl(ev.pos), '#7be07b'); await sleep(dur(260)); return;
     }
     case 'faint': {
-      pushLog(ev.text);
+      pushLog(ev.text); if (!fastForward) playSfx('faint');
       await playClass(sprEl(ev.pos), 'fainting', 620);
       setView(ev.pos, { hp: 0, fainted: true, gone: true }); paintSlot(ev.pos);
       if (!B.fainted[ev.side].includes(ev.name)) B.fainted[ev.side].push(ev.name);
@@ -12186,15 +12323,37 @@ async function hostedNet(){
  const r=await fetch('/api/session',{signal:AbortSignal.timeout(2500)});if(!r.ok)return null;const session=await r.json();if(!session.uid||session.version!==1)return null;
  const request=async(p,method,body)=>{const r=await fetch('/api/doc/'+p,{method,headers:body?{'Content-Type':'application/json'}:{},body:body?JSON.stringify(body):undefined});const d=await r.json();if(!r.ok)throw Error(d.error||'Error de conexión');return d;};
  const snap=d=>({exists:d.exists,data:()=>d.data});
- return {db:{doc:p=>({get:async()=>snap(await request(p,'GET')),set:d=>request(p,'PUT',d),update:d=>request(p,'PATCH',d),onSnapshot:(next,error)=>{const events=new EventSource('/api/events/'+p);events.onmessage=e=>{try{next(snap(JSON.parse(e.data)))}catch(err){error?.(err)}};events.onerror=()=>error?.(Error('Reconectando'));return()=>events.close()}})},user:{id:async()=>session.uid,can:async()=>true,joinUrls:session.joinUrls||[]},hosted:true};
+ const skew=Number.isFinite(session.now)?session.now-Date.now():0;
+ return {skew,idleMs:session.idleMs,db:{doc:p=>({get:async()=>snap(await request(p,'GET')),set:d=>request(p,'PUT',d),update:d=>request(p,'PATCH',d),onSnapshot:(next,error)=>{const events=new EventSource('/api/events/'+p);events.onmessage=e=>{try{next(snap(JSON.parse(e.data)))}catch(err){error?.(err)}};events.onerror=()=>error?.(Error('Reconectando'));return()=>events.close()}})},user:{id:async()=>session.uid,can:async()=>true,joinUrls:session.joinUrls||[]},hosted:true};
 }
+// Codes carry the run's badges (b) and r:1 when that run randomizes moves or TM compatibility.
+// Without r, every move must be in the species' learnset (or a prevolution's).
+const monLabel=m=>D.species.get(m.s).exists?D.species.get(m.s).name:String(m.s||'¿?');
 function validTeamCode(data){
  if(!data||!Array.isArray(data.t)||!data.t.length||data.t.length>6)throw Error('Equipo inválido');
- data.t.forEach(m=>{if(!m||!D.species.get(m.s).exists||!Number.isInteger(m.l)||m.l<1||m.l>100||!Array.isArray(m.m)||!m.m.length||m.m.length>4||m.m.some(x=>!D.moves.get(x).exists)||!D.abilities.get(m.a).exists||!D.natures.get(m.n).exists||(m.it&&!D.items.get(m.it).exists)||Object.values(m.i||{}).some(x=>!Number.isInteger(x)||x<0||x>31))throw Error('Pokémon inválido');});
- return {n:String(data.n||'Amigo').slice(0,14),t:JSON.parse(JSON.stringify(data.t))};
+ const b=data.b==null?8:data.b;if(!Number.isInteger(b)||b<0||b>8)throw Error('Número de medallas inválido');const cap=CAPS[Math.min(b,CAPS.length-1)];
+ data.t.forEach(m=>{if(!m||!D.species.get(m.s).exists||!Number.isInteger(m.l)||m.l<1||m.l>100||!Array.isArray(m.m)||!m.m.length||m.m.length>4||m.m.some(x=>!D.moves.get(x).exists)||!D.abilities.get(m.a).exists||!D.natures.get(m.n).exists||(m.it&&!D.items.get(m.it).exists)||Object.values(m.i||{}).some(x=>!Number.isInteger(x)||x<0||x>31))throw Error('Pokémon inválido');
+  if(m.l>cap)throw Error(`${monLabel(m)} está al Nv ${m.l}, pero con ${b} medalla${b===1?'':'s'} el tope es Nv ${cap}`);});
+ return {n:String(data.n||'Amigo').slice(0,14),b,r:data.r?1:0,t:JSON.parse(JSON.stringify(data.t))};
 }
+async function learnsetOf(id){try{return D.species.getLearnsetData?D.species.getLearnsetData(id):await D.learnsets.get(id)}catch{return null}}
+async function learnable(species,move){
+ if(move==='splash'||move==='struggle')return true;
+ const seen=new Set();let cur=D.species.get(species);
+ while(cur?.exists&&!seen.has(cur.id)){seen.add(cur.id);const ls=await learnsetOf(cur.id);if(ls?.learnset?.[move])return true;
+  const base=cur.changesFrom||(cur.baseSpecies!==cur.name?cur.baseSpecies:null);cur=D.species.get(ls?.learnset?(cur.prevo||base):(base||cur.prevo));}
+ return false;
+}
+// Full check (async because of learnsets): returns the cleaned code or throws a Spanish message.
+async function checkTeam(data){
+ const d=validTeamCode(data);if(d.r)return d;
+ for(const m of d.t)for(const x of m.m){const mv=D.moves.get(x);if(!await learnable(m.s,mv.id))throw Error(`${monLabel(m)} no puede aprender ${moveName(mv.id)}`);}
+ return d;
+}
+function randomMoves(c) { return !c || c.movesRandom !== false || c.tmCompat === 'all'; }
+function codeError(e) { const m = e && e.message; return m && m !== 'Equipo inválido' && m !== 'Pokémon inválido' && /Nv |medalla|aprender/.test(m) ? 'Código rechazado: ' + m : 'Ese código no es válido'; }
 // ================= FRIENDS / EXPORT =================
-function teamCode() { return 'RLKT.' + enc64({ n: playerName(), seed: S.cfg.seed, b: S.badges, t: S.party.map(m => ({ s: m.species, k: m.nick, l: m.level, a: m.ability, m: m.moves, n: m.nature, i: m.ivs, g: m.gender, h: m.shiny ? 1 : 0, it: m.item })) }); }
+function teamCode() { return 'RLKT.' + enc64({ n: playerName(), seed: S.cfg.seed, b: S.badges, r: randomMoves(S.cfg) ? 1 : 0, t: S.party.map(m => ({ s: m.species, k: m.nick, l: m.level, a: m.ability, m: m.moves, n: m.nature, i: m.ivs, g: m.gender, h: m.shiny ? 1 : 0, it: m.item })) }); }
 function showdownText() { return Teams.export(S.party.map(m => { const st = setFor(m, false); st.moves = st.moves.filter(Boolean); delete st.uid; st.name = m.nick || ''; return st; })); }
 ACT.exportTeam = () => {
   if (!S.party.length) return toast('No tienes equipo');
@@ -12207,8 +12366,8 @@ ACT.friendly = () => modal(`<div class="modal-head"><h2>Combate amistoso</h2><bu
   <textarea id="fcode" placeholder="RLKT.…"></textarea>
   <label class="opt"><span><b>Igualar niveles a 50</b><br><span class="d">Para un torneo justo</span></span><span class="sw"><input type="checkbox" id="flevel"><span></span></span></label>
   <div class="row" style="justify-content:flex-end"><button class="btn primary" data-a="friendlyGo">Combatir</button></div>`);
-ACT.friendlyGo = () => {
-  let data; try { data = validTeamCode(dec64($('#fcode').value.trim().replace(/^RLKT\./, ''))); } catch { return toast('Ese código no es válido'); }
+ACT.friendlyGo = async () => {
+  let data; try { data = await checkTeam(dec64($('#fcode').value.trim().replace(/^RLKT\./, ''))); } catch (e) { return toast(codeError(e)); }
   const lvl50 = $('#flevel').checked;
   const foe = data.t.map((x, i) => ({ uid: 9000 + i, species: x.s, nick: x.k, level: lvl50 ? 50 : x.l, ability: x.a, moves: x.m, nature: x.n, ivs: x.i, gender: x.g, shiny: !!x.h, item: x.it, hp: null, status: '' }));
   const party = S.party.map(m => ({ ...m, level: lvl50 ? 50 : m.level, hp: null, status: '' }));
@@ -12241,12 +12400,12 @@ async function net() {
   let db = null, user = null, mode = 'claude';
   try {
     if (window.claude && typeof window.claude.use === 'function') { [db, user] = await Promise.all([window.claude.use('db'), window.claude.use('user')]); }
-    else {let host=null;try{host=await hostedNet()}catch{}if(host){({db,user}=host);mode='server';}else if(IS_LOCAL){({db,user}=mockNet());mode='local';}}
+    else {let host=null;try{host=await hostedNet()}catch{}if(host){({db,user}=host);user={...user,skew:host.skew,idleMs:host.idleMs};mode='server';}else if(IS_LOCAL){({db,user}=mockNet());mode='local';}}
   } catch { db = null; }
   if (!db) return (NET = { db: null });
   let uid = null; try { uid = user ? await user.id() : null; } catch { }
   let canWrite = null; try { canWrite = user && user.can ? await user.can('data.write') : null; } catch { }
-  return (NET = { db, user, uid: uid || localTabId(), mode, joinUrls:user?.joinUrls||[], canWrite });
+  return (NET = { db, user, uid: uid || localTabId(), mode, joinUrls:user?.joinUrls||[], canWrite, skew: user?.skew || 0, idleMs: user?.idleMs || PVP_IDLE_MS });
 }
 const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const newCode = n => Array.from({ length: n }, () => CODE_CHARS[Math.floor(Math.random() * CODE_CHARS.length)]).join('');
@@ -12259,6 +12418,10 @@ function compactTeam(party) { return party.map(m => ({ s: m.species, k: m.nick |
 function monsFromCompact(t, lvl50, base = 0) { return t.map((x, i) => ({ uid: base + i, species: x.s, nick: x.k, level: lvl50 ? 50 : x.l, ability: x.a, moves: x.m, nature: x.n, ivs: x.i, gender: x.g, shiny: !!x.h, item: x.it || null, hp: null, status: '' })); }
 function savedRun() { return S || loadSave(); }
 function myTeam() { if (ON.pasted) return ON.pasted.t; const sv = savedRun(); if (sv && !sv.over && sv.party && sv.party.length) return compactTeam(sv.party); return null; }
+function myRules() { if (ON.pasted) return { b: ON.pasted.b, r: ON.pasted.r }; const sv = savedRun();
+  // A real run never goes over its cap; edited saves and QA fixtures can, so declare the badges their levels need.
+  let b = sv?.badges || 0; const lv = Math.max(0, ...(sv?.party || []).map(m => m.level)); while (b < 8 && CAPS[b] < lv) b++;
+  return { b, r: randomMoves(sv?.cfg) ? 1 : 0 }; }
 function myName() { return (ON.name || (ON.pasted && ON.pasted.n) || savedRun()?.player?.name || 'Entrenador').slice(0, 14); }
 function teamIcons(t) { return (t || []).map(x => icon(x.s)).join(''); }
 
@@ -12266,7 +12429,7 @@ ACT.online = async () => { closeModal(); ON.active = true; ON.view = 'lobby'; if
 ACT.onlineExit = () => { leaveRoom(); leaveTourney(); ON.active = false; B = null; render(); };
 ACT.onlineLobby = () => { leaveRoom(); leaveTourney(); B = null; ON.view = 'lobby'; render(); };
 ACT.pasteTeam = () => modal(`<div class="modal-head"><h2>Usar otro equipo</h2><button class="btn sm" data-a="closeModal">Volver</button></div><p class="muted small">Pega un código de equipo (RLKT.…). Lo sacas en Menú → Exportar mi equipo.</p><textarea id="ptcode" placeholder="RLKT.…"></textarea><div class="row" style="margin-top:10px;justify-content:flex-end"><button class="btn ghost" data-a="clearPasted">Usar mi partida</button><button class="btn primary" data-a="applyPasted">Usar este equipo</button></div>`);
-ACT.applyPasted = () => { try { const d = validTeamCode(dec64($('#ptcode').value.trim().replace(/^RLKT\./, ''))); if (!Array.isArray(d.t) || !d.t.length) throw 0; ON.pasted = d; if (!ON.name) ON.name = d.n || ''; closeModal(); render(); } catch { toast('Ese código no es válido'); } };
+ACT.applyPasted = async () => { try { const d = await checkTeam(dec64($('#ptcode').value.trim().replace(/^RLKT\./, ''))); ON.pasted = d; if (!ON.name) ON.name = d.n || ''; closeModal(); render(); } catch (e) { toast(codeError(e)); } };
 ACT.clearPasted = () => { ON.pasted = null; closeModal(); render(); };
 function readOnlineInputs() { const n = $('#on-name'); if (n) ON.name = n.value.trim().slice(0, 14); const l = $('#on-l50'); if (l) ON.lvl50 = l.checked; }
 
@@ -12275,7 +12438,7 @@ function renderOnline() {
   if (ON.view === 'room' && B && B.o.kind === 'pvp') return; // battle screen owns #app
   if (!NET) { app().innerHTML = `<div class="loading"><div><div class="spin" style="margin:0 auto 12px"></div><h2>Conectando…</h2></div></div>`; return; }
   if (!NET.db) {
-    app().innerHTML = `<section class="panel stack" style="max-width:640px;margin:0 auto"><span class="label">Combates online</span><h2>No se puede conectar desde aquí</h2><p>Abre el juego en el alojamiento con servidor de salas o en claude.ai con sesión iniciada.</p><p class="muted">Para alojarlo con tus amigos, usa tools/serve-online.cjs. También puedes exportar tu equipo a Pokémon Showdown o combatir contra la IA.</p><div class="row"><button class="btn" data-a="onlineExit">Volver</button></div></section>`;
+    app().innerHTML = `<section class="panel stack" style="max-width:640px;margin:0 auto"><span class="label">Combates online</span><h2>El online no está disponible en esta página</h2><p>El online funciona en el enlace de claude.ai o jugando en red con JUGAR-EN-RED.</p><p class="muted">Mientras tanto, puedes exportar tu equipo a Pokémon Showdown o hacer un combate amistoso contra la IA con el código de un amigo.</p><div class="row"><button class="btn" data-a="onlineExit">Volver</button></div></section>`;
     return;
   }
   if (ON.view === 'waiting') return renderWaiting();
@@ -12307,11 +12470,11 @@ document.addEventListener('change', e => { if (e.target && (e.target.id === 'on-
 
 // ---------- 1v1 rooms ----------
 const roomRef = code => NET.db.doc('pvp/' + code);
-function playerEntry() { return { id: NET.uid, name: myName(), team: myTeam() }; }
+function playerEntry() { return { id: NET.uid, name: myName(), team: myTeam(), ...myRules() }; }
 ACT.roomCreate = async () => {
   readOnlineInputs(); if (!myTeam()) return toast('Necesitas un equipo');
   const code = newCode(6);
-  try { await roomRef(code).set({ v: 1, code, created: Date.now(), seed: randSeed(), lvl50: ON.lvl50, status: 'waiting', p1: playerEntry(), p2: null, ch: {}, forfeit: null, winner: null, tourney: null, mid: null }); }
+  try { await roomRef(code).set({ v: 1, code, created: Date.now(), seed: randSeed(), lvl50: ON.lvl50, status: 'waiting', started: null, p1: playerEntry(), p2: null, ch: {}, t: {}, forfeit: null, claim: null, winner: null, tourney: null, mid: null }); }
   catch (e) { return toast(e && e.code === 'quota_exceeded' ? 'No caben más salas. Avisa al dueño de la página.' : 'No se pudo crear la sala'); }
   openRoom(code);
 };
@@ -12325,7 +12488,7 @@ async function joinRoomCode(code) {
   if (!snap.exists) return toast('No existe ninguna sala con ese código');
   const d = snap.data();
   if (d.status === 'waiting' && !d.p2 && d.p1.id !== NET.uid && myTeam() && NET.canWrite !== false) {
-    try { await roomRef(code).update({ p2: playerEntry(), status: 'playing' }); } catch { return toast('No se pudo entrar en la sala'); }
+    try { await roomRef(code).update({ p2: playerEntry(), status: 'playing', started: Date.now() }); } catch { return toast('No se pudo entrar en la sala'); }
   }
   openRoom(code);
 }
@@ -12341,7 +12504,7 @@ function onRoom(code, snap) {
   if (!snap.exists) { toast('La sala ya no existe'); ACT.onlineLobby(); return; }
   const d = snap.data(); ON.room = d;
   if (d.p1 && d.p2 && d.status !== 'waiting') {
-    if (!B || B.o.kind !== 'pvp' || B.code !== code) startPvp(d); else pvpSync(d);
+    if (!B || B.o.kind !== 'pvp' || B.code !== code) startPvpChecked(code); else pvpSync(d);
   } else if (ON.view === 'waiting') renderWaiting();
 }
 function renderWaiting() {
@@ -12354,10 +12517,19 @@ function renderWaiting() {
 }
 ACT.copyRoom = () => copyText(ON.roomCode || '');
 
+// Learnsets load asynchronously, so both teams are checked before the battle is built.
+async function startPvpChecked(code) {
+  if (ON.starting === code) return; ON.starting = code;
+  const d = ON.room;
+  try { for (const p of [d.p1, d.p2]) await checkTeam({ t: p.team, b: p.b, r: p.r }); }
+  catch (e) { ON.starting = null; toast('La sala contiene un equipo inválido: ' + (e?.message || '')); ACT.onlineLobby(); return; }
+  ON.starting = null;
+  if (ON.roomCode === code && (!B || B.o.kind !== 'pvp' || B.code !== code)) startPvp(ON.room);
+}
 function startPvp(d) {
   const side = d.p1.id === NET.uid ? 'p1' : d.p2.id === NET.uid ? 'p2' : null;
   const me = side || 'p1'; const foe = me === 'p1' ? 'p2' : 'p1';
-  try{validTeamCode({t:d.p1.team});validTeamCode({t:d.p2.team})}catch{toast('La sala contiene un equipo inválido');ACT.onlineLobby();return;}
+  try{for(const p of [d.p1,d.p2])validTeamCode({t:p.team,b:p.b,r:p.r})}catch{toast('La sala contiene un equipo inválido');ACT.onlineLobby();return;}
   const battle = new Battle({ formatid: 'gen9customgame', seed: d.seed });
   battle.setPlayer('p1', { name: d.p1.name, team: monsFromCompact(d.p1.team, d.lvl50, 1000).map(m => setFor(m, false)) });
   battle.setPlayer('p2', { name: d.p2.name, team: monsFromCompact(d.p2.team, d.lvl50, 2000).map(m => setFor(m, false)) });
@@ -12392,7 +12564,7 @@ function pvpSentThisRound() { const r = ((B.room && B.room.ch) || {})['r' + B.ro
 async function pvpSend(choice) {
   if (!B || B.spectator || B.busy || pvpSentThisRound()) return;
   const round = B.round; B.pending = round; renderControls();
-  try { await roomRef(B.code).update({ ch: { ['r' + round]: { [B.me]: choice } } }); }
+  try { await roomRef(B.code).update({ ch: { ['r' + round]: { [B.me]: choice } }, t: { ['r' + round]: { [B.me]: Date.now() } } }); }
   catch { B.pending = null; toast('No se pudo enviar. Inténtalo otra vez.'); renderControls(); }
 }
 async function pvpForfeit() {
@@ -12403,7 +12575,7 @@ async function pvpForfeit() {
 }
 function pvpAfter() {
   const bt = B.battle;
-  if (!bt.ended) { renderControls(); return; }
+  if (!bt.ended) { renderControls(); pvpClock(); return; }
   if (B.ended) return;
   const winSide = winnerSide(bt, B.room && B.room.forfeit);
   // record the result once (both players write the same value)
@@ -12413,8 +12585,49 @@ function pvpAfter() {
     if (d.tourney && d.mid) NET.db.doc('torneos/' + d.tourney).update({ matches: { [d.mid]: { winner: winSide?d[winSide].id:null, draw:!winSide } } }).catch(() => { });
   }
   endBattle({ won: winSide === B.me, draw:!winSide });
-  if (d.forfeit) pushLog(`${d[d.forfeit].name} se ha rendido.`);
+  if (d.forfeit) pushLog(d.claim ? `${d[d.forfeit].name} no respondió a tiempo: ${d[d.claim].name} reclama la victoria.` : `${d[d.forfeit].name} se ha rendido.`);
 }
+// ---------- Idle rival: countdown and claimable win ----------
+// Each choice stores its time in t.r<N>.<side>; a round opens when the previous one's last choice
+// arrived (or when the room started). The waiting player may claim the win once the rival has had
+// NET.idleMs since the later of that moment and their own choice. The hosted server rechecks it
+// with its own clock; in the other modes the claimant re-reads the room first.
+const PVP_IDLE_MS = 120000;
+const netNow = () => Date.now() + (NET?.skew || 0);
+function roundOpenAt(d, n) { const prev = n > 0 ? Object.values((d.t || {})['r' + (n - 1)] || {}).filter(Number.isFinite) : []; return Math.max(d.started || d.created || 0, ...prev); }
+function pvpIdle() {
+  if (!B || B.o.kind !== 'pvp' || B.spectator || B.ended || B.busy || !B.room || B.battle.ended) return null;
+  const d = B.room, need = needs(B.battle), foe = B.me === 'p1' ? 'p2' : 'p1';
+  const r = (d.ch || {})['r' + B.round] || {}, t = (d.t || {})['r' + B.round] || {};
+  const mine = typeof r[B.me] === 'string' || B.pending === B.round, theirs = typeof r[foe] === 'string' || !!t[foe];
+  const open = roundOpenAt(d, B.round), limit = NET.idleMs || PVP_IDLE_MS;
+  if (need.includes(foe) && !theirs) {
+    if (need.includes(B.me) && !mine) return null;
+    return { who: 'foe', left: Math.max(open, need.includes(B.me) ? (t[B.me] || netNow()) : 0) + limit - netNow() };
+  }
+  if (need.includes(B.me) && !mine) return { who: 'me', left: Math.max(open, t[foe] || 0) + limit - netNow() };
+  return null;
+}
+function idleText(ms) { return ms >= 60000 ? `${Math.round(ms / 60000)} minutos` : `${Math.round(ms / 1000)} segundos`; }
+function pvpClock() {
+  const c = $('#bctl'), old = document.getElementById('pvp-clock'), st = c ? pvpIdle() : null;
+  if (!st) { old?.remove(); return; }
+  let el = old; if (!el || el.parentNode !== c) { old?.remove(); el = document.createElement('div'); el.id = 'pvp-clock'; el.className = 'small pvp-clock'; el.style.cssText = 'margin-top:6px;text-align:center'; c.appendChild(el); }
+  const sec = Math.max(0, Math.ceil(st.left / 1000)), mmss = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`, foe = esc(B.o.foeName);
+  const html = st.who === 'foe'
+    ? (sec > 0 ? `${foe} tiene <b>${mmss}</b> para elegir. Si no responde, podrás reclamar la victoria.` : `<span role="status">${foe} lleva más de ${idleText(NET.idleMs || PVP_IDLE_MS)} sin elegir.</span> <button class="btn sm primary" data-a="pvpClaim">Reclamar victoria</button>`)
+    : (sec > 0 ? `Tu rival ya ha elegido. Tienes <b>${mmss}</b> para elegir.` : `<span role="status">Se acabó tu tiempo: tu rival puede reclamar la victoria. ¡Elige ya!</span>`);
+  if (el.dataset.h !== html) { el.dataset.h = html; el.innerHTML = html; }
+}
+setInterval(pvpClock, 1000);
+ACT.pvpClaim = async () => {
+  if (!B || B.o.kind !== 'pvp' || B.spectator || B.ended) return;
+  const foe = B.me === 'p1' ? 'p2' : 'p1';
+  try {
+    if (NET.mode !== 'server') { const s = await roomRef(B.code).get(); if (s.exists) B.room = s.data(); const st = pvpIdle(); if (!st || st.who !== 'foe' || st.left > 0) { pvpClock(); return toast('Tu rival acaba de responder'); } }
+    await roomRef(B.code).update({ forfeit: foe, claim: B.me });
+  } catch (e) { toast(NET.mode === 'server' && e?.message ? e.message : 'No se pudo reclamar la victoria'); }
+};
 function pvpLeave(res) {
   const tcode = ON.room && ON.room.tourney;
   leaveRoom(); B = null;
@@ -12426,7 +12639,7 @@ const tRef = code => NET.db.doc('torneos/' + code);
 ACT.tCreate = async () => {
   readOnlineInputs(); if (!myTeam()) return toast('Necesitas un equipo');
   const code = 'T' + newCode(4);
-  try { await tRef(code).set({ v: 1, code, host: NET.uid, created: Date.now(), lvl50: ON.lvl50, status: 'open', players: { [NET.uid]: { name: myName(), team: myTeam(), at: Date.now() } }, matches: {} }); }
+  try { await tRef(code).set({ v: 1, code, host: NET.uid, created: Date.now(), lvl50: ON.lvl50, status: 'open', players: { [NET.uid]: { name: myName(), team: myTeam(), ...myRules(), at: Date.now() } }, matches: {} }); }
   catch { return toast('No se pudo crear el torneo'); }
   openTourney(code);
 };
@@ -12437,7 +12650,7 @@ ACT.tJoin = async () => {
   if (!snap.exists) return toast('No existe ningún torneo con ese código');
   const d = snap.data();
   if (d.status === 'open' && !(d.players || {})[NET.uid] && myTeam() && NET.canWrite !== false) {
-    try { await tRef(code).update({ players: { [NET.uid]: { name: myName(), team: myTeam(), at: Date.now() } } }); } catch { return toast('No se pudo entrar en el torneo'); }
+    try { await tRef(code).update({ players: { [NET.uid]: { name: myName(), team: myTeam(), ...myRules(), at: Date.now() } } }); } catch { return toast('No se pudo entrar en el torneo'); }
   }
   openTourney(code);
 };
@@ -12472,6 +12685,7 @@ function renderTourney() {
   </section>`;
 }
 ACT.copyT = () => copyText(ON.tCode || '');
+function tEntry(t, id) { const p = t.players[id]; return { id, name: p.name, team: p.team, b: p.b, r: p.r }; }
 ACT.tStart = async () => {
   const t = ON.tourney; if (!t || t.host !== NET.uid || t.status !== 'open') return;
   const ids = Object.entries(t.players).sort((a, b) => (a[1].at || 0) - (b[1].at || 0)).map(([id]) => id);
@@ -12481,7 +12695,7 @@ ACT.tStart = async () => {
     const mid = 'm' + k; const room = `${t.code}-M${k}`; k++;
     const a = ids[i], b = ids[j];
     matches[mid] = { a, b, room, winner: null };
-    try { await roomRef(room).set({ v: 1, code: room, created: Date.now(), seed: randSeed(), lvl50: t.lvl50, status: 'playing', p1: { id: a, name: t.players[a].name, team: t.players[a].team }, p2: { id: b, name: t.players[b].name, team: t.players[b].team }, ch: {}, forfeit: null, winner: null, tourney: t.code, mid }); }
+    try { await roomRef(room).set({ v: 1, code: room, created: Date.now(), seed: randSeed(), lvl50: t.lvl50, status: 'playing', started: Date.now(), p1: tEntry(t, a), p2: tEntry(t, b), ch: {}, t: {}, forfeit: null, claim: null, winner: null, tourney: t.code, mid }); }
     catch { return toast('No se pudieron crear los combates'); }
   }
   try { await tRef(t.code).update({ status: 'running', matches }); } catch { toast('No se pudo empezar el torneo'); }
@@ -12490,6 +12704,7 @@ ACT.tOpen = d => { const room = d.room; leaveTourney(); openRoom(room); };
 
 // ---- src/boot.js ----
 // ================= BOOT =================
+document.documentElement.lang = 'es';
 await loadAssets();
 render();
 
