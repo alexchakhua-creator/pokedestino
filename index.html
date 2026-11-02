@@ -6771,6 +6771,7 @@ const WORLD = {
         "kind": "go",
         "label": "Isla Canela",
         "to": "canela",
+        "at": [50, 21],
         "requires": [
           "t2"
         ]
@@ -6891,6 +6892,7 @@ const WORLD = {
         "kind": "go",
         "label": "Volver · Isla Canela",
         "to": "canela",
+        "at": [67, 9],
         "x": 68,
         "y": 57
       },
@@ -8254,14 +8256,11 @@ const WORLD = {
     "kind": "town",
     "scene": "canela",
     "bgm": "town",
-    "spawn": [
-      7,
-      63
-    ],
+    "spawn": [50, 21],
     "pois": [
       {
-        "x": 29,
-        "y": 60,
+        "x": 61,
+        "y": 35,
         "id": "center",
         "kind": "go",
         "label": "Centro Pokémon",
@@ -8269,8 +8268,8 @@ const WORLD = {
         "center": true
       },
       {
-        "x": 26,
-        "y": 55,
+        "x": 82,
+        "y": 19,
         "id": "gym",
         "kind": "go",
         "label": "Gimnasio · Blaine",
@@ -8282,8 +8281,8 @@ const WORLD = {
         ]
       },
       {
-        "x": 23,
-        "y": 51,
+        "x": 66,
+        "y": 8,
         "id": "next",
         "kind": "go",
         "label": "Ruta 21",
@@ -8299,8 +8298,8 @@ const WORLD = {
         "kind": "go",
         "label": "Volver · Mansión Pokémon",
         "to": "mansion",
-        "x": 2,
-        "y": 68
+        "x": 50,
+        "y": 19
       }
     ],
     "chapterTown": {
@@ -8352,6 +8351,7 @@ const WORLD = {
         "x": 10,
         "y": 17,
         "label": "Salir",
+        "at": [61, 36],
         "to": "canela"
       }
     ]
@@ -8421,6 +8421,7 @@ const WORLD = {
         "id": "exit",
         "kind": "go",
         "label": "Salir del gimnasio",
+        "at": [82, 20],
         "to": "canela"
       }
     ],
@@ -10116,7 +10117,8 @@ function renderTitle() {
       ${hasOldSave() ? '<p class="small muted">Tu partida de Randomlocke Kanto (versión anterior) sigue guardada, pero no es compatible con esta aventura.</p>' : ''}
     </div></section>`;
 }
-ACT.continue = async () => { S = loadSave(); if (!S) return render(); S.cfg.regionalForms??=true; syncCampaignRules(); S.caught=[...new Set(S.caught.map(id=>{const sp=D.species.get(id);return sp.exists?familyOf(sp):id}))];buildPools(); if (await resumeSavedBattle()) return; playMusic(node().bgm); render();S.pending ||= [];await processPending();render(); await upgradeGuidedProgress(); };
+// Old Cinnabar points stood on the sea (bottom-left of the scene); saves left there move to the new arrival point.
+ACT.continue = async () => { S = loadSave(); if (!S) return render(); if (S.at?.node === 'canela' && S.at.x < 40 && S.at.y > 45) S.at = { node: 'canela', x: WORLD.canela.spawn[0], y: WORLD.canela.spawn[1], dir: 'down' }; S.cfg.regionalForms??=true; syncCampaignRules(); S.caught=[...new Set(S.caught.map(id=>{const sp=D.species.get(id);return sp.exists?familyOf(sp):id}))];buildPools(); if (await resumeSavedBattle()) return; playMusic(node().bgm); render();S.pending ||= [];await processPending();render(); await upgradeGuidedProgress(); };
 let NG = { step: 0, cfg: { ...DEFAULT_CFG, seed: randomSeed() }, preset: 'random', player: { name: '', gender: 'm' } };
 ACT.newGame = () => { NG = { step: 0, cfg: { ...DEFAULT_CFG, seed: randomSeed() }, preset: 'random', player: { name: '', gender: 'm' } }; drawNewGame(); };
 function optSwitch(key, title, desc) { return `<label class="opt"><span><b>${title}</b>${desc ? `<br><span class="d">${desc}</span>` : ''}</span><span class="sw"><input type="checkbox" data-cfg="${key}" ${NG.cfg[key] ? 'checked' : ''}><span></span></span></label>`; }
