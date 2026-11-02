@@ -1069,6 +1069,11 @@ input[type=range] { accent-color:#111827; }
 .modal-bag .bag-foot,.modal-bag .bag-foot .muted,.modal-bag .bag-foot .small { color:#EDEDED; }
 .modal-team :focus-visible,.modal-bag > :not(.bag-detail):not(.bag-list) :focus-visible,.b-ui :focus-visible,.top :focus-visible { outline-color:#EDEDED; }
 .capture-bush:hover,.capture-bush:focus-visible { color:#111827; text-shadow:none; }
+/* Express mode: duration choice in the new-game wizard */
+.ng-sub { margin:12px 0 6px; font-size:15px; color:#1F2937; }
+.ng-sub:first-child { margin-top:0; }
+.presets.length { margin-bottom:6px; }
+.steps-dots .done { color:#4B5563; }
 </style>
 <div class="top"><div class="bar" id="topbar"></div></div>
 <div id="app"><div class="loading"><div><div class="spin"></div><h2>Cargando Kanto…</h2><p class="small">Preparando el motor de combate</p></div></div></div>
@@ -1183,6 +1188,7 @@ const DEFAULT_CFG = {
   dupes: true, shinyRate: 512, nicknames: false,
   catchMod: 'normal', evoSimplify: true, evoAuto: true, retreatChance: 40, doubles: 'some',
   rescue: true, rescueStart: 1, rescuePerGym: 1, rescueMax: 2,
+  express: false,
   seed: ''
 };
 const PRESETS = {
@@ -10018,7 +10024,7 @@ function renderTitle() {
   app().innerHTML = `<section class="title-screen"><div class="title-bg" aria-hidden="true"></div>
     <div class="title-card panel"><div class="title-emblem" aria-hidden="true"></div><div class="title-kicker">KANTO · RANDOMLOCKE</div><h1 class="logo"><img class="brand-logo" src="assets/ui/pokedestino-logo.png" alt="PokéDestino"></h1><div class="title-rule" aria-hidden="true"><i></i><i></i><i></i></div><p class="small">Un Randomlocke de Kanto: cada encuentro es aleatorio, cada caída es para siempre.</p><p class="small campaign-scope">Kanto hasta la Liga · 8 gimnasios · 40 zonas de captura · 50 MT</p>
       <div class="title-menu">
-        ${sv && !sv.over ? `<button class="btn primary big" data-a="continue">▸ Continuar</button>` : ''}
+        ${sv && !sv.over ? `<button class="btn primary big" data-a="continue">▸ Continuar${sv.cfg?.express ? " · Express" : ""}</button>` : ''}
         <button class="btn big ${sv && !sv.over ? '' : 'primary'}" data-a="newGame">Nueva partida</button>
         <button class="btn big" data-a="online">Online</button>
         <button class="btn big" data-a="openOptions">Opciones</button><button class="btn big" data-a="saveTools">Partidas · importar / exportar</button>
@@ -10046,7 +10052,7 @@ function drawNewGame() {
     <label class="opt"><span><b>Tu nombre</b></span><input type="text" id="ng-name" maxlength="12" value="${esc(NG.player.name)}" placeholder="Escribe tu nombre"></label>
     <label class="opt"><span><b>Semilla</b><br><span class="d">Misma semilla, mismos encuentros que tus amigos</span></span><input type="text" id="ng-seed" maxlength="20" value="${esc(NG.cfg.seed)}"></label>
     <p class="small muted">La elección es solo visual: no cambia estadísticas ni dificultad.</p>` : ''}
-  ${NG.step === 1 ? `<div class="presets">${Object.entries(PRESETS).map(([k, p]) => `<button class="card preset ${NG.preset === k ? 'on' : ''}" data-a="ngPreset" data-k="${k}"><b>${p.name}</b><span class="small">${p.desc}</span></button>`).join('')}</div>
+  ${NG.step === 1 ? `<h3 class="ng-sub">Duración</h3><div class="presets length">${[['0','Partida completa','Todo Kanto: entrenadores en cada ruta y 40 zonas de captura. Unas 6–8 horas.'],['1','Express · 1 hora','La misma historia sin entrenadores de ruta: líderes, rival, jefes y Liga. 15 capturas, líderes con un Pokémon menos y tu equipo sube solo de nivel.']].map(([v,t,d])=>`<button class="card preset ${(!!NG.cfg.express)===(v==='1')?'on':''}" data-a="ngLength" data-v="${v}"><b>${t}</b><span class="small">${d}</span></button>`).join('')}</div><h3 class="ng-sub">Reglas</h3><div class="presets">${Object.entries(PRESETS).map(([k, p]) => `<button class="card preset ${NG.preset === k ? 'on' : ''}" data-a="ngPreset" data-k="${k}"><b>${p.name}</b><span class="small">${p.desc}</span></button>`).join('')}</div>
     <div class="rules-note small">Siempre: una captura por zona · muerte permanente · Balls ilimitadas · sin curas desde la mochila en combate.</div>` : ''}
   ${NG.step === 2 ? `<div class="config-accordion">
     <details class="config-group" open><summary><b>Pokémon</b><small>Generaciones, encuentros y evoluciones</small></summary><div class="config-body">
@@ -10082,7 +10088,8 @@ function drawNewGame() {
   <div class="ng-foot"><button class="btn ghost" data-a="${NG.step ? 'ngBack' : 'ngCancel'}">Volver</button><button class="btn primary" data-a="${NG.step < 2 ? 'ngNext' : 'ngStart'}">${NG.step < 2 ? 'Siguiente' : 'Empezar'}</button></div></section>`;
 }
 ACT.ngGender = d => { readNG(); NG.player.gender = d.g; drawNewGame(); };
-ACT.ngPreset = d => { readNG(); const seed = NG.cfg.seed; NG.cfg = { ...DEFAULT_CFG, ...PRESETS[d.k].cfg, seed }; NG.preset = d.k; drawNewGame(); };
+ACT.ngLength = d => { readNG(); NG.cfg.express = d.v === '1'; drawNewGame(); };
+ACT.ngPreset = d => { readNG(); const seed = NG.cfg.seed, express = !!NG.cfg.express; NG.cfg = { ...DEFAULT_CFG, ...PRESETS[d.k].cfg, seed, express }; NG.preset = d.k; drawNewGame(); };
 ACT.ngNext = () => { readNG(); if (NG.step === 0 && !NG.player.name) { toast('Escribe tu nombre'); $('#ng-name')?.focus(); return; } NG.step++; drawNewGame(); };
 ACT.ngBack = () => { readNG(); NG.step--; drawNewGame(); };
 ACT.ngCancel = () => render();
@@ -10333,16 +10340,28 @@ const poiKey = (n, p) => n + ':' + p;
 const isDone = (n, p) => !!S.done[poiKey(n, p)];
 function reqOk(n, p) {
   for (const r of p.requires || []) {
-    if (typeof r === 'string') { if (!isDone(n, r)) return false; }
+    if (typeof r === 'string') { if (!isDone(n, r) && !expressSkips(n, WORLD[n].pois.find(x => x.id === r))) return false; }
     else if (r.flag) { if (!S.flags[r.flag]) return false; }
-    else if (r.done) { if (!S.done[r.done]) return false; }
+    else if (r.done) { const [dn, dp] = r.done.split(':'); if (!S.done[r.done] && !expressSkips(dn, WORLD[dn]?.pois.find(x => x.id === dp))) return false; }
     else if (r.visited) { if (!S.visited[r.visited]) return false; }
     else if (r.badge) { if (badges() < r.badge) return false; }
   }
   return true;
 }
+// ---------- Express mode (about 1 h) ----------
+// Same Kanto and story, shorter: ordinary trainers step aside (leaders, rival, gang bosses and the
+// League stay), only a few zones keep a capture, and the team keeps pace with the level caps by itself.
+const isExpress = () => !!S?.cfg?.express;
+const EXPRESS_CAPTURES = [3, 2, 1, 1, 2, 2, 2, 2, 0]; // zones that keep a capture, by badges owned (15 in all)
+function expressSkips(id, p) { return isExpress() && p?.kind === 'trainer' && !p.boss && !p.elite && !['alto-mando', 'campeon'].includes(id); }
+function expressCaptureOpen() { const b = badges(); return ((S.expressCaps ||= {})[b] || 0) < (EXPRESS_CAPTURES[b] ?? 0); }
+function expressLevelTarget(n) {
+  if (n.kind === 'gym' || ['alto-mando', 'campeon', 'pasoliga'].includes(S.at.node)) return capNow();
+  return n.lv ? Math.min(capNow(), n.lv[1]) : 0;
+}
 const REPEATABLE = ['go', 'heal', 'shop', 'pc', 'trade', 'locked'];
 function poiState(n, p) {
+  if (expressSkips(n, p)) return 'done';
   if (p.kind === 'grass') { const e = S.enc[n]; if (!e || e.state === 'pending') return reqOk(n, p) ? 'open' : 'blocked'; return 'done'; }
   if (!REPEATABLE.includes(p.kind) && isDone(n, p.id)) return 'done';
   if (p.kind === 'go' && !reqOk(n, p)) return p.locked ? 'locked' : 'blocked';
@@ -10473,7 +10492,7 @@ function capturePending() {
   return allDecisions().find(x => x.p.kind === 'grass') || null;
 }
 function localDetour() {
-  if(capturePending() || !['route','zone'].includes(node().kind))return null;
+  if(isExpress() || capturePending() || !['route','zone'].includes(node().kind))return null;
   const main=mainDecision(),guided=new Set(GUIDE_STEPS[S.at.node]||[]);
   return allDecisions().filter(x=>x.p.id!==main?.p.id && !guided.has(x.p.id) && !x.p.mandatory && !/^supply-|^tm-supply/.test(x.p.id) && ['item','npc','gift','trainer'].includes(x.p.kind) && x.p.reward).sort((a,b)=>(b.p.reward.cat==='tm'?3:b.p.kind==='npc'?2:1)-(a.p.reward.cat==='tm'?3:a.p.kind==='npc'?2:1))[0]||null;
 }
@@ -10552,7 +10571,7 @@ function trainingUnlockedLevel() {
   let level=5;
   for(const [id,n] of Object.entries(WORLD)) for(const p of n.pois)
     if(isDone(id,p.id)&&p.trainTo)level=Math.max(level,p.trainTo);
-  if(badges()>=1)level=Math.max(level,14);
+  if(badges()>=1||isExpress())level=Math.max(level,isExpress()?capNow():14);
   return Math.min(capNow(),level);
 }
 function trainPartyTo(level) {
@@ -10570,7 +10589,7 @@ ACT.revealBushes=()=>{const e=S.enc[S.at.node];if(captureRevealHTML(e))return in
 function captureStatusHTML() {
   if(!node().pois.some(p=>p.kind==='grass'))return '';
   const state=S.enc[S.at.node]?.state||'pending';
-  const label={pending:'Captura disponible',caught:'Captura conseguida',failed:'Captura perdida',fled:'Captura perdida: huiste',none:'Sin familias nuevas disponibles'}[state]||'Encuentro usado';
+  const label={pending:'Captura disponible',caught:'Captura conseguida',failed:'Captura perdida',fled:'Captura perdida: huiste',none:'Sin familias nuevas disponibles',express:'Modo express: sin captura en esta zona'}[state]||'Encuentro usado';
   return '<span class="zone-state">'+esc(label)+'</span>';
 }
 ACT.captureBush=d=>ACT.poi(d);
@@ -10751,8 +10770,12 @@ async function travel(to, at, opts = {}) {
   S.at = { node: to, x: at ? at[0] : n.spawn[0], y: at ? at[1] : n.spawn[1], dir: at && at[1] < n.spawn[1] ? 'down' : 'up' };
   S.visited[to] = 1;
   if (n.kind === 'center') S.lastCenter = to;
-  if (first) partyCatchUp(n);
-  if (n.pois.some(p => p.kind === 'grass') && !S.enc[to]) await generateEncounter(to);
+  if (isExpress()) { const t = expressLevelTarget(n); let up = 0; for (const m of S.party) if (m.level < t) { S.pending.push(...setLevel(m, t)); up++; } if (up) toast(`Modo express: tu equipo sube hasta Nv ${t}`); }
+  else if (first) partyCatchUp(n);
+  if (n.pois.some(p => p.kind === 'grass') && !S.enc[to]) {
+    if (isExpress() && !expressCaptureOpen()) S.enc[to] = { state: 'express' };
+    else { if (isExpress()) S.expressCaps[badges()] = (S.expressCaps[badges()] || 0) + 1; await generateEncounter(to); }
+  }
   save(); playMusic(n.bgm); render();
   await processPending(); if (to === 'alto-mando') beginLeagueAttempt(); save();
   if (!B) render();
@@ -10923,7 +10946,8 @@ async function leaderPoi(id, p) {
   if (p.warn && !isDone(id, 'warn-' + p.id)) { const ok = await choose(`Líder ${L.name}`, `<p>${esc(p.warn)}</p>`, [{ v: 'go', html: '<b>Desafiar</b>' }, { v: 'no', html: '<b>Todavía no</b>' }], true); if (ok !== 'go') return; }
   await say(L.intro);
   const type = S.cfg.gymTypes === 'none' ? null : S.cfg.gymTypes === 'random' ? new Rng(S.cfg.seed, 'gymtypes').shuffle(TYPES)[L.badge - 1] : L.type;
-  const team = (await trainerTeam(id, 'leader', L.cap, L.size, { type, ace: true, items: true })).team;
+  // Express leaders bring one Pokémon fewer (never below two): shorter fights with fewer spare lives
+  const team = (await trainerTeam(id, 'leader', L.cap, isExpress() ? Math.max(2, L.size - 1) : L.size, { type, ace: true, items: true })).team;
   const dbl=!!L.double&&S.party.length>=2&&S.cfg.doubles!=='off';
   if (!await preBattle(`Líder ${L.name}`, `<p>Combate de gimnasio. Tipo ${type ? TYPE_ES[type] : 'variado'} · Nv ${Math.max(...team.map(m=>m.level))}.</p>`, dbl)) return;
   startBattle({ kind: 'leader', doubles:dbl, foe: team, foeName: `Líder ${L.name}`, title: n.name, bb: L.bb, bgm: 'boss', resume: { type: 'leader', id, poi: p.id }, onEnd: res => afterLeader(res, id, p) });
